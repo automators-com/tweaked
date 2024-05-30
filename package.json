@@ -1,0 +1,30 @@
+{
+  "name": "tweaked",
+  "description": "A new Astro project",
+  "author": "Automators",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "format:frontend": "prettier --ignore-path ./.prettierignore --write \"**/*.+(js|jsx|tsx|ts|astro|json)\"",
+    "format:rust": "cd src-tauri && cargo fmt && cd ..",
+    "format": "pnpm run format:frontend && pnpm run format:rust",
+    "astro": "astro",
+    "tauri": "tauri"
+  },
+  "dependencies": {
+    "@astrojs/tailwind": "^5.1.0",
+    "@tauri-apps/api": "^1.5.6",
+    "@tauri-apps/cli": "^1.5.14",
+    "astro": "^4.9.2",
+    "tailwindcss": "^3.4.3"
+  },
+  "devDependencies": {
+    "prettier": "^3.2.5",
+    "prettier-plugin-astro": "^0.14.0",
+    "prettier-plugin-rust": "^0.1.9"
+  }
+}
