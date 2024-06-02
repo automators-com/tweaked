@@ -14,7 +14,9 @@
     "format": "pnpm run format:frontend && pnpm run format:rust",
     "astro": "astro",
     "tauri": "tauri",
-    "server": "cd server && uvicorn main:app --reload"
+    "server:dev": "cd server && uvicorn main:app --reload",
+    "server": "cd server && uvicorn main:app",
+    "server:install": "python3 -m venv .venv && source .venv/bin/activate && pip install -r ./server/requirements.txt"
   },
   "dependencies": {
     "@astrojs/tailwind": "^5.1.0",
