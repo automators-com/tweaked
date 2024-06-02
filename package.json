@@ -13,7 +13,8 @@
     "format:rust": "cd src-tauri && cargo fmt && cd ..",
     "format": "pnpm run format:frontend && pnpm run format:rust",
     "astro": "astro",
-    "tauri": "tauri"
+    "tauri": "tauri",
+    "server": "cd server && uvicorn main:app --reload"
   },
   "dependencies": {
     "@astrojs/tailwind": "^5.1.0",
