@@ -47,11 +47,12 @@
     "withGlobalTauri": true,
     "windows": [
       {
-        "fullscreen": false,
-        "height": 800,
-        "resizable": true,
         "title": "tweaked.ai",
-        "width": 1200
+        "width": 1200,
+        "height": 800,
+        "fullscreen": false,
+        "resizable": true,
+        "decorations": false
       }
     ],
     "security": {

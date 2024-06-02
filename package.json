@@ -14,9 +14,11 @@
     "format": "pnpm run format:frontend && pnpm run format:rust",
     "astro": "astro",
     "tauri": "tauri",
-    "server:dev": "cd server && uvicorn main:app --reload",
-    "server": "cd server && uvicorn main:app",
-    "server:install": "python3 -m venv .venv && source .venv/bin/activate && pip install -r ./server/requirements.txt"
+    "server:venv": "python3 -m venv .venv",
+    "server:activate": "source .venv/bin/activate",
+    "server:dev": "cd server && ../.venv/bin/uvicorn main:app --reload",
+    "server:start": "pnpm run server:activate && cd server && ../.venv/bin/uvicorn main:app",
+    "server:install": "pnpm run server:venv && pnpm run server:activate && .venv/bin/pip install -r ./server/requirements.txt"
   },
   "dependencies": {
     "@astrojs/tailwind": "^5.1.0",
