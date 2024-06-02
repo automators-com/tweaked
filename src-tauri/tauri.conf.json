@@ -39,20 +39,24 @@
       }
     }
   },
-  "productName": "tweaked.ai",
+  "productName": "Tweaked",
   "version": "0.1.0",
   "identifier": "ai.tweaked",
   "plugins": {},
   "app": {
     "withGlobalTauri": true,
+    "macOSPrivateApi": true,
     "windows": [
       {
-        "title": "tweaked.ai",
+        "title": "Tweaked",
         "width": 1200,
         "height": 800,
         "fullscreen": false,
         "resizable": true,
-        "decorations": false
+        "decorations": true,
+        "transparent": true,
+        "titleBarStyle": "Overlay",
+        "hiddenTitle": true
       }
     ],
     "security": {
