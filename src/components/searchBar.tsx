@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useStore } from "@nanostores/react";
-import { $baseUrl } from "../store/env";
+import { baseUrl } from "../store/config";
 
 export default function SearchBar({
   preview,
@@ -11,7 +11,7 @@ export default function SearchBar({
   preview: any;
   setSelectedPreview: any;
 }) {
-  const baseUrl = useStore($baseUrl);
+  const endpoint = useStore(baseUrl);
   const [loading, setLoading] = useState(false);
   const [prompt, setPrompt] = useState("");
 
@@ -19,7 +19,7 @@ export default function SearchBar({
     setLoading(true);
     console.log(prompt);
     try {
-      const res = await fetch(`${baseUrl}/migrations/new`, {
+      const res = await fetch(`${endpoint}/migrations/new`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

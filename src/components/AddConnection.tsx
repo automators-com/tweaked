@@ -3,11 +3,10 @@
 import { useState } from "react";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { useStore } from "@nanostores/react";
-import { $baseUrl } from "../store/env";
-import { connection } from "../store/config";
+import { connection, baseUrl } from "../store/config";
 
 export default function AddConnection() {
-  const baseUrl = useStore($baseUrl);
+  const endpoint = useStore(baseUrl);
   const connectionString = useStore(connection);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -18,7 +17,7 @@ export default function AddConnection() {
     setError(false);
 
     try {
-      const res = await fetch(`${baseUrl}/data/previews`, {
+      const res = await fetch(`${endpoint}/data/previews`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
