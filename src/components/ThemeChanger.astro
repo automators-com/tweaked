@@ -1,9 +1,10 @@
 ---
+const { align } = Astro.props;
 const themes = ["automators", "light", "dark", "cupcake", "garden"];
 ---
 
-<div class="dropdown mb-72" data-choose-theme>
-  <div tabindex="0" role="button" class="btn m-1">
+<div class={`dropdown ${align ?? ``} mb-72`} data-choose-theme>
+  <div tabindex="0" role="button" class="btn btn-sm m-1">
     Theme
     <svg
       width="12px"
@@ -17,7 +18,7 @@ const themes = ["automators", "light", "dark", "cupcake", "garden"];
   </div>
   <ul
     tabindex="0"
-    class="dropdown-content z-[1] p-2 shadow-2xl bg-base-300 rounded-box w-52"
+    class="dropdown-content z-[1] p-2 shadow-2xl bg-base-300 rounded-box w-auto"
   >
     {
       themes.map((theme) => {

@@ -4,7 +4,7 @@ from datetime import datetime
 import tempfile
 import json
 
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from openai import OpenAI
 from pydantic import BaseModel
 
@@ -32,11 +32,14 @@ class NewMigration(BaseModel):
 
 @router.post("/migrations/new")
 async def generate_migration_file(req: NewMigration):
+    if not req.prompt:
+        raise HTTPException(status_code=400, detail="prompt is required")
+
     # add context to the prompt
     messages = [
         {
             "role": "system",
-            "content": "You are a helpful assistant. Your job is to write python functions that help users make desired modifications to their data. Provide only a valid python script in your response. The script should contain a function should be named 'handler'. It's only argument should be a pandas dataframe. It must return the modified pandas dataframe. Do not call the function in your script.",
+            "content": "You are a helpful assistant. Your job is to write python functions that help users make desired modifications to their data. Provide only a simple valid python script in your response. The script should contain a function should be named 'handler'. It's only argument should be a pandas dataframe. It must return the modified pandas dataframe. Do not call the function in your script.",
         },
     ]
     if req.preview:
@@ -49,7 +52,10 @@ async def generate_migration_file(req: NewMigration):
     messages.append({"role": "user", "content": req.prompt})
 
     # create the completion using AI
-    res = client.chat.completions.create(model="gpt-4o", messages=messages)
+    res = client.chat.completions.create(
+        model="gpt-4o",
+        messages=messages,
+    )
     # write the response to a file
     script = res.choices[0].message.content
     # replace the code block markdown
@@ -73,7 +79,9 @@ async def generate_migration_file(req: NewMigration):
         temp_file_path = temp_file.name
 
     # Execute the temporary Python file in a subprocess
-    result = subprocess.run(["python", temp_file_path], capture_output=True, text=True)
+    result = subprocess.run(
+        ["../.venv/bin/python", temp_file_path], capture_output=True, text=True
+    )
 
     # Clean up the temporary file
     os.remove(temp_file_path)

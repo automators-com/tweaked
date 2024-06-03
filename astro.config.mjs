@@ -1,15 +1,14 @@
 import { defineConfig } from "astro/config";
 import tailwind from "@astrojs/tailwind";
-
-import svelte from "@astrojs/svelte";
+import react from "@astrojs/react";
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [tailwind(), svelte()],
+  integrations: [tailwind(), react()],
   vite: {
     clearScreen: false,
     server: {
-      strictPort: true
+      strictPort: true,
     },
     envPrefix: ["ASTRO_", "VITE_", "TAURI_"],
     build: {
@@ -18,7 +17,7 @@ export default defineConfig({
       // don't minify for debug builds
       minify: !process.env.TAURI_DEBUG ? "esbuild" : false,
       // produce sourcemaps for debug builds
-      sourcemap: !!process.env.TAURI_DEBUG
-    }
-  }
+      sourcemap: !!process.env.TAURI_DEBUG,
+    },
+  },
 });

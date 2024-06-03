@@ -1,16 +1,16 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import ThemeChanger from "../components/ThemeChanger.astro";
 import Navbar from "../components/Navbar.astro";
 import Titlebar from "../components/TitleBar.astro";
+import Table from "../components/Table";
 ---
 
 <Layout title="Tweaked">
   <Navbar />
   <main>
     <Titlebar />
-    <div class="mt-4">
-      <ThemeChanger />
+    <div class="mt-2 w-full max-w-[calc(100vw_-_15rem)]">
+      <Table client:only="react" />
     </div>
   </main>
 </Layout>
