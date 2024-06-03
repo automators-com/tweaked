@@ -13,11 +13,11 @@ html {
 }
 
 body {
-  @apply flex flex-col items-center justify-start min-h-screen font-mono;
+  @apply flex items-center justify-start min-h-screen font-mono p-0 m-0;
 }
 
 main {
-  @apply h-screen w-full bg-base-100;
+  @apply h-screen bg-base-100 overflow-hidden w-full grid grid-cols-1 place-content-start;
 }
 
 main > #titlebar {

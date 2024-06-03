@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import SearchBar from "./searchBar";
+import { toggleRightNav } from "../store/nav";
 
 export default function Table() {
   const [selectedPreview, setSelectedPreview] = useState<any[]>([]);
@@ -50,7 +51,7 @@ export default function Table() {
 
   return (
     <>
-      <div className="flex flex-col h-[calc(100vh_-_4rem)] justify-between">
+      <div className="flex flex-col w-full h-[calc(100vh_-_4rem)] justify-between">
         <div className="overflow-x-auto w-full mt-4 ">
           <table className="table table-sm">
             <thead>
