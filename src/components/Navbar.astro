@@ -4,7 +4,7 @@ import TableList from "./TableList";
 const currentUrl = Astro.url;
 ---
 
-<nav class="bg-base-300/95 w-60 flex flex-col justify-between pt-10 px-4">
+<nav class="bg-base-300 w-60 flex flex-col justify-between pt-10 px-4">
   {
     currentUrl.pathname === "/tweaks" ? (
       <TableList client:only="react" />

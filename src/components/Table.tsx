@@ -55,7 +55,7 @@ export default function Table() {
         setSelectedPreview={setSelectedPreview}
       />
       <div className="overflow-x-auto w-full mt-4">
-        <table className="table">
+        <table className="table table-sm">
           <thead>
             <tr>
               {selectedPreview[0] &&
@@ -71,7 +71,7 @@ export default function Table() {
                   <tr key={index} className="hover">
                     {Object.values(row).map((value, index) => {
                       return (
-                        <td className="truncate" key={index}>
+                        <td className="truncate text-xs" key={index}>
                           {value as string}
                         </td>
                       );

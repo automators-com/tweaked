@@ -29,10 +29,8 @@ export default function AddConnection() {
         const data = await res.json();
         setPreviews(data);
         setLoading(false);
-        setTimeout(() => {
-          // redirect to the tweaks page
-          window.location.href = "/tweaks";
-        }, 3000);
+        // redirect to the tweaks page
+        window.location.href = "/tweaks";
       }
     } catch (error) {
       console.log(error);

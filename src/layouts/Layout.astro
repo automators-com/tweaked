@@ -28,6 +28,19 @@ const { title } = Astro.props;
       themeChange();
       // 👆 you could import the CDN directly instead of these two lines
     </script>
+    <script>
+      // hotkeys
+      const hotKeys = (e: any) => {
+        let windowEvent = window.event ? event : e;
+        // listen for cmd + ,
+        if (windowEvent.keyCode == 188 && windowEvent.metaKey) {
+          // go to the settings page
+          window.location.href = "/settings";
+        }
+      };
+
+      document.onkeydown = hotKeys;
+    </script>
     <meta charset="UTF-8" />
     <meta name="description" content="Astro description" />
     <meta name="viewport" content="width=device-width" />

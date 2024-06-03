@@ -46,7 +46,7 @@ export default function SearchBar({
         handleSubmit();
       }}
     >
-      <label className="input input-bordered flex items-center gap-2">
+      <label className="input input-bordered input-md flex items-center gap-2">
         <input
           type="text"
           className="grow"
