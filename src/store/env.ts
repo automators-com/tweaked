@@ -1,5 +1,3 @@
 import { atom } from "nanostores";
 
-export const $env = atom({
-  baseUrl: import.meta.env.VITE_TWEAKED_API,
-});
+export const $baseUrl = atom("http://localhost:8000");

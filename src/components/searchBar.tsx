@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useStore } from "@nanostores/react";
-import { $env } from "../store/env";
+import { $baseUrl } from "../store/env";
 
 export default function SearchBar({
   preview,
@@ -11,7 +11,7 @@ export default function SearchBar({
   preview: any;
   setSelectedPreview: any;
 }) {
-  const { baseUrl } = useStore($env);
+  const baseUrl = useStore($baseUrl);
   const [loading, setLoading] = useState(false);
   const [prompt, setPrompt] = useState("");
 

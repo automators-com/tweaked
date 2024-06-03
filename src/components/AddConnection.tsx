@@ -3,22 +3,22 @@
 import { useState } from "react";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { useStore } from "@nanostores/react";
-import { $env } from "../store/env";
+import { $baseUrl } from "../store/env";
 import { connection } from "../store/config";
 
 export default function AddConnection() {
-  const env = useStore($env);
+  const baseUrl = useStore($baseUrl);
   const connectionString = useStore(connection);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  const [_, setPreviews] = useLocalStorage("previews", []);
+  const [previews, setPreviews] = useLocalStorage("previews", []);
 
   async function handleTest() {
     setLoading(true);
     setError(false);
 
     try {
-      const res = await fetch(`${env.baseUrl}/data/previews`, {
+      const res = await fetch(`${baseUrl}/data/previews`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -29,8 +29,10 @@ export default function AddConnection() {
         const data = await res.json();
         setPreviews(data);
         setLoading(false);
-        // redirect to the tweaks page
-        window.location.href = "/tweaks";
+        setTimeout(() => {
+          // redirect to the tweaks page
+          window.location.href = "/tweaks";
+        }, 3000);
       }
     } catch (error) {
       console.log(error);
