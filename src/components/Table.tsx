@@ -50,37 +50,39 @@ export default function Table() {
 
   return (
     <>
-      <SearchBar
-        preview={selectedPreview}
-        setSelectedPreview={setSelectedPreview}
-      />
-      <div className="overflow-x-auto w-full mt-4">
-        <table className="table table-sm">
-          <thead>
-            <tr>
-              {selectedPreview[0] &&
-                Object.keys(selectedPreview[0]).map((key, index) => {
-                  return <th key={index}>{key}</th>;
+      <div className="flex flex-col h-[calc(100vh_-_4rem)] justify-between">
+        <div className="overflow-x-auto w-full mt-4 ">
+          <table className="table table-sm">
+            <thead>
+              <tr>
+                {selectedPreview[0] &&
+                  Object.keys(selectedPreview[0]).map((key, index) => {
+                    return <th key={index}>{key}</th>;
+                  })}
+              </tr>
+            </thead>
+            <tbody>
+              {selectedPreview &&
+                selectedPreview?.map((row, index) => {
+                  return (
+                    <tr key={index} className="hover">
+                      {Object.values(row).map((value, index) => {
+                        return (
+                          <td className="truncate text-xs" key={index}>
+                            {value as string}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  );
                 })}
-            </tr>
-          </thead>
-          <tbody>
-            {selectedPreview &&
-              selectedPreview?.map((row, index) => {
-                return (
-                  <tr key={index} className="hover">
-                    {Object.values(row).map((value, index) => {
-                      return (
-                        <td className="truncate text-xs" key={index}>
-                          {value as string}
-                        </td>
-                      );
-                    })}
-                  </tr>
-                );
-              })}
-          </tbody>
-        </table>
+            </tbody>
+          </table>
+        </div>
+        <SearchBar
+          preview={selectedPreview}
+          setSelectedPreview={setSelectedPreview}
+        />
       </div>
     </>
   );
