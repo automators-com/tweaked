@@ -20,10 +20,6 @@ main {
   @apply h-screen bg-base-100 overflow-hidden w-full grid grid-cols-1 place-content-start;
 }
 
-main > #titlebar {
-  @apply px-0 !important;
-}
-
 main > * {
   @apply px-4;
 }

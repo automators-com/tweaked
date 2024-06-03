@@ -4,21 +4,28 @@ import TableList from "./TableList";
 const currentUrl = Astro.url;
 ---
 
-<nav class="bg-base-300 w-60 flex h-screen flex-col justify-between pt-10 px-4">
+<nav class="bg-base-300 w-60 flex h-screen flex-col justify-between px-4">
+  <div id="title-bar-area" class="h-10 w-full"></div>
   {
     currentUrl.pathname === "/tweaks" ? (
       <TableList client:only="react" />
     ) : (
-      <div>
-        <a class="btn btn-sm btn-ghost btn-block justify-start" href="/tweaks">
-          Back to tweaks
+      <div class="h-full flex flex-col justify-start">
+        <a
+          class="btn btn-sm text-xs btn-ghost btn-block justify-start"
+          href="/tweaks"
+        >
+          Go Back
         </a>
       </div>
     )
   }
 
-  <div class="mb-2">
-    <a class="btn btn-sm btn-block btn-ghost justify-start" href="/connection">
+  <div class="mb-4">
+    <a
+      class="btn btn-sm text-xs btn-block btn-ghost justify-start"
+      href="/connection"
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 20 20"
@@ -33,7 +40,10 @@ const currentUrl = Astro.url;
 
       Connection
     </a>
-    <a class="btn btn-sm btn-block btn-ghost justify-start" href="/settings">
+    <a
+      class="btn btn-sm text-xs btn-block btn-ghost justify-start"
+      href="/settings"
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"

@@ -23,7 +23,8 @@ export default function TableList() {
     });
   }
   return (
-    <div>
+    <div className="h-full overflow-auto flex flex-col justify-start mt-4">
+      <h4 className="text-xs uppercase mb-2">Tables</h4>
       {previews &&
         sortByKey(previews, "table_name").map((preview: any, index) => {
           return (
@@ -34,7 +35,7 @@ export default function TableList() {
                 setSelectedTable(preview.table_name);
               }}
             >
-              <span className="truncate">{preview.table_name}</span>
+              {preview.table_name}
             </button>
           );
         })}

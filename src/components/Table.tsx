@@ -51,8 +51,8 @@ export default function Table() {
 
   return (
     <>
-      <div className="flex flex-col w-full h-[calc(100vh_-_4rem)] justify-between">
-        <div className="overflow-x-auto w-full mt-4 ">
+      <div className="flex mt-4 flex-col w-full h-[calc(100vh_-_5rem)] justify-between">
+        <div className="overflow-x-auto w-full ">
           <table className="table table-sm">
             <thead>
               <tr>
