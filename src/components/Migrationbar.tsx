@@ -1,5 +1,6 @@
 import { useStore } from "@nanostores/react";
 import { $nav, toggleRightNav } from "../store/nav";
+import RunMigrations from "./runMigrations";
 
 export default function Migrationbar() {
   const nav = useStore($nav);
@@ -25,16 +26,16 @@ export default function Migrationbar() {
             className="size-4 fill-primary"
           >
             <path
-              fill-rule="evenodd"
+              fillRule="evenodd"
               d="M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z"
-              clip-rule="evenodd"
+              clipRule="evenodd"
             />
           </svg>
         </button>
       </div>
-      <div className="h-full overflow-auto pt-2">Hello</div>
+      {/* <div className="h-full overflow-auto pt-2">Not available</div> */}
       <div>
-        <button className="btn btn-accent btn-block">Push Changes</button>
+        <RunMigrations />
       </div>
     </aside>
   );

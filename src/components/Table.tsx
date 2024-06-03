@@ -1,31 +1,22 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useLocalStorage } from "@uidotdev/usehooks";
 import SearchBar from "./searchBar";
-import { toggleRightNav } from "../store/nav";
+import { useStore } from "@nanostores/react";
+import { $selectedTable } from "../store/config";
+import { $previews } from "../store/previews";
 
 export default function Table() {
+  const selectedTable = useStore($selectedTable);
   const [selectedPreview, setSelectedPreview] = useState<any[]>([]);
-  const [previews, _setPreviews] = useLocalStorage<
-    {
-      table_name: string;
-      table_row_count: number;
-      preview: any[];
-    }[]
-  >("previews", []);
-
-  const [selectedTable, _setSelectedTable] = useLocalStorage(
-    "selectedTable",
-    null,
-  );
+  const previews = useStore($previews);
 
   useEffect(() => {
-    if (selectedTable === null) {
+    if (selectedTable === "") {
       return;
     }
 
     const selectedPreview = previews.find(
-      (preview) => preview.table_name === selectedTable,
+      (preview) => preview.id === selectedTable,
     )?.preview;
 
     if (selectedPreview) {
@@ -33,7 +24,7 @@ export default function Table() {
     }
   }, [selectedTable]);
 
-  if (selectedTable === null) {
+  if (selectedTable === "") {
     return (
       <div className="w-full mt-4 flex justify-center items-center">
         Please select a table

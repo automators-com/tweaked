@@ -1,32 +1,34 @@
 "use client";
 
 import { useState } from "react";
-import { useLocalStorage } from "@uidotdev/usehooks";
 import { useStore } from "@nanostores/react";
-import { connection, baseUrl } from "../store/config";
+import { $connection, $baseUrl, $previewLimit } from "../store/config";
+import { $previews } from "../store/previews";
 
 export default function AddConnection() {
-  const endpoint = useStore(baseUrl);
-  const connectionString = useStore(connection);
+  const baseUrl = useStore($baseUrl);
+  const connection = useStore($connection);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  const [previews, setPreviews] = useLocalStorage("previews", []);
 
   async function handleTest() {
     setLoading(true);
     setError(false);
 
     try {
-      const res = await fetch(`${endpoint}/data/previews`, {
+      const res = await fetch(`${baseUrl}/data/previews`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ connection_string: connectionString }),
+        body: JSON.stringify({
+          connection_string: connection,
+          limit: $previewLimit.get(),
+        }),
       });
       if (res.ok) {
         const data = await res.json();
-        setPreviews(data);
+        $previews.set(data);
         setLoading(false);
         // redirect to the tweaks page
         window.location.href = "/tweaks";
@@ -46,9 +48,9 @@ export default function AddConnection() {
       <input
         type="text"
         placeholder="Enter a connection string"
-        value={connectionString}
+        value={connection}
         className="input input-bordered input-accent w-full"
-        onChange={(e) => connection.set(e.target.value)}
+        onChange={(e) => $connection.set(e.target.value)}
       />
       <div className="flex justify-center w-full">
         <button

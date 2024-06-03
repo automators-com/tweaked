@@ -1,15 +1,22 @@
 import os
-import subprocess
 from datetime import datetime
-import tempfile
 import json
 
 from fastapi import APIRouter, HTTPException
 from openai import OpenAI
 from pydantic import BaseModel
 
-from utils.storage import upload_string_to_bucket
-from utils.execution_scripts import preview_exec_script
+from utils.db_helpers import use_psycopg_protocol
+from utils.storage import (
+    upload_string_to_bucket,
+    list_files_in_folder,
+    get_file_content_from_bucket,
+)
+from utils.execution_scripts import (
+    call_script_in_subprocess,
+    preview_exec_script,
+    db_exec_script,
+)
 
 OPENAI_ORG = os.getenv("OPENAI_ORG")
 OPENAI_PROJECT = os.getenv("OPENAI_PROJECT")
@@ -73,23 +80,52 @@ async def generate_migration_file(req: NewMigration):
     script += preview_exec_script(req.preview)
     print(script)
 
-    # Write the script to a temporary Python file
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".py") as temp_file:
-        temp_file.write(script.encode())
-        temp_file_path = temp_file.name
-
     # Execute the temporary Python file in a subprocess
-    result = subprocess.run(
-        ["../.venv/bin/python", temp_file_path], capture_output=True, text=True
-    )
-
-    # Clean up the temporary file
-    os.remove(temp_file_path)
+    result = call_script_in_subprocess(script)
 
     # Check for any errors
     if result.stderr:
         print("Errors from subprocess:")
-        return result.stderr
+        return HTTPException(status_code=400, detail=result.stderr)
     else:
         # return the updated preview
         return json.loads(result.stdout)
+
+
+@router.get("/migrations/{id}")
+async def get_migrations(id: str):
+    # get the list of files in the folder
+    files = list_files_in_folder(id)
+    return files or []
+
+
+class RunMigration(BaseModel):
+    folder: str
+    table_name: str
+    connection_string: str
+
+
+@router.post("/migrations/run")
+async def run_migration(req: RunMigration):
+    print(req)
+    # get the list of migrations to run
+    files = list_files_in_folder(req.folder)
+    print(files)
+
+    for file in files:
+        print(file)
+        # fetch the file content
+        script = get_file_content_from_bucket(file)
+        script += db_exec_script(
+            req.table_name, use_psycopg_protocol(req.connection_string)
+        )
+        print(script)
+
+        # Execute the temporary Python file in a subprocess
+        result = call_script_in_subprocess(script)
+        print(result)
+
+        if "success" in result.stdout:
+            return result.stdout
+        else:
+            return HTTPException(status_code=400, detail=result.stderr)

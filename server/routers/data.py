@@ -3,14 +3,14 @@ from pydantic import BaseModel
 from sqlmodel import create_engine
 from sqlalchemy import Engine
 import pandas as pd
+import uuid
 from utils.db_helpers import use_psycopg_protocol
 
 router = APIRouter()
 
 
 class DatabaseInfo(BaseModel):
-    # TODO: update this to a more sensible default
-    connection_string: str = "postgres://postgres:postgres@localhost:5432/capacities"
+    connection_string: str = "postgres://user:password@localhost:5432/db"
     limit: int = 5
 
 
@@ -31,6 +31,8 @@ async def fetch_database_table_previews(db_info: DatabaseInfo):
 
     with engine.connect() as connection:
         for pos, item in enumerate(previews):
+            # generate a random uuid for each table
+            item["id"] = uuid.uuid4()
             table_name = item["table_name"]
             # fetch the first 5 rows of each table
             table_preview = pd.read_sql(

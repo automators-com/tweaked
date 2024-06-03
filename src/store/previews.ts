@@ -1,14 +1,13 @@
 import { persistentAtom } from "@nanostores/persistent";
 
 type Previews = {
-  [table_name: string]: any[];
+  id: string;
+  table_name: string;
+  table_row_count: number;
+  preview: any[];
 };
 
-export const $previews = persistentAtom<Previews>(
-  "previews",
-  {},
-  {
-    encode: JSON.stringify,
-    decode: JSON.parse,
-  },
-);
+export const $previews = persistentAtom<Previews[]>("previews", [], {
+  encode: (value) => JSON.stringify(value),
+  decode: (value) => JSON.parse(value),
+});

@@ -1,19 +1,11 @@
 "use client";
 
-import { useLocalStorage } from "@uidotdev/usehooks";
+import { $selectedTable } from "../store/config";
+import { $previews } from "../store/previews";
+import { useStore } from "@nanostores/react";
 
 export default function TableList() {
-  const [previews, _setPreviews] = useLocalStorage<
-    {
-      table_name: string;
-      table_row_count: number;
-      preview: any;
-    }[]
-  >("previews", []);
-  const [_selectedTable, setSelectedTable] = useLocalStorage(
-    "selectedTable",
-    null,
-  );
+  const previews = useStore($previews);
 
   function sortByKey(array: any[], key: string) {
     return array.sort(function (a, b) {
@@ -32,7 +24,7 @@ export default function TableList() {
               key={index}
               className="btn btn-sm text-xs btn-block flex flex-row btn-ghost justify-between whitespace-nowrap"
               onClick={() => {
-                setSelectedTable(preview.table_name);
+                $selectedTable.set(preview.id);
               }}
             >
               {preview.table_name}
