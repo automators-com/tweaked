@@ -40,7 +40,6 @@
     }
   },
   "productName": "Tweaked",
-  "version": "0.1.0",
   "identifier": "ai.tweaked",
   "plugins": {},
   "app": {
