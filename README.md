@@ -1,14 +1,19 @@
-# Astro + Tailwind Tauri Starter App
+# Tweaked.ai
 
 ![Screenshot](/screenshot.png)
 
 To get started, run:
 
 ```sh
-git clone https://github.com/RatulMaharaj/astro-tauri-tailwind.git
+git clone https://github.com/automators-com/tweaked.git
 ```
 
-or click the green [Use this template](https://github.com/new?template_name=astro-tauri-tailwind&template_owner=RatulMaharaj) button above.
+In order to contribute to this application, you need to have the following installed:
+
+- [Node.js](https://nodejs.org/en/)
+- [pnpm](https://pnpm.io/)
+- [Rust](https://www.rust-lang.org/tools/install)
+- [Python](https://www.python.org/downloads/)
 
 ## 🚀 Project Structure
 
@@ -22,6 +27,8 @@ Inside of this project, you'll see the following folders and files:
 │       └── publish.yml # Builds and creates a release
 ├── public/
 │   └── favicon.svg
+├── server/ # The python server logic lives here
+│   └── main.py
 ├── src/ # The astro frontend logic lives here
 │   ├── components/
 │   │   └── Card.astro
@@ -43,22 +50,14 @@ Inside of this project, you'll see the following folders and files:
 └── package.json
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
-
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-Any static assets, like images, can be placed in the `public/` directory.
-
 ## 🧞 Commands
 
 All commands are run from the root of the project, from a terminal:
 
-| Command            | Action                                                               |
-| :----------------- | :------------------------------------------------------------------- |
-| `pnpm install`     | Installs dependencies                                                |
-| `pnpm tauri dev`   | Starts local dev server and compiles tauri dev app                   |
-| `pnpm tauri build` | Build the app and outputs the binary to `./src-tauri/target/release` |
-
-## 👀 Want to learn more?
-
-Feel free to check [the astro documentation](https://docs.astro.build) or [the tauri guides](https://tauri.app/v1/guides/).
+| Command                   | Action                                                               |
+| :------------------------ | :------------------------------------------------------------------- |
+| `pnpm install`            | Installs dependencies                                                |
+| `pnpm run tauri dev`      | Starts local dev server and compiles tauri dev app                   |
+| `pnpm run tauri build`    | Build the app and outputs the binary to `./src-tauri/target/release` |
+| `pnpm run server:install` | Sets up the python environment                                       |
+| `pnpm run server:dev`     | Starts the python server in dev mode                                 |
