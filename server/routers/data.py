@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from sqlmodel import create_engine
 from sqlalchemy import Engine
 import pandas as pd
+import numpy as np
 import uuid
 from utils.db_helpers import use_psycopg_protocol
 
@@ -39,6 +40,7 @@ async def fetch_database_table_previews(db_info: DatabaseInfo):
                 f"""SELECT * FROM "{table_name}" LIMIT {db_info.limit}""", connection
             )
 
+            table_preview.replace({np.nan: None}, inplace=True)
             previews[pos]["preview"] = table_preview.to_dict(orient="records")
 
     return previews
