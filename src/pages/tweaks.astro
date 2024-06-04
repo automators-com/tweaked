@@ -1,6 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import Navbar from "../components/Navbar.astro";
+import Navbar from "../components/Navbar";
 import Titlebar from "../components/TitleBar.astro";
 import Table from "../components/Table";
 import Migrationbar from "../components/Migrationbar";
@@ -8,7 +8,7 @@ import MigrationToggle from "../components/MigrationToggle";
 ---
 
 <Layout title="Tweaked">
-  <Navbar />
+  <Navbar client:only="react" />
   <div class="flex w-full px-0 mx-0 overflow-hidden">
     <main>
       <Titlebar>

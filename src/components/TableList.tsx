@@ -3,17 +3,12 @@
 import { $selectedTable } from "../store/config";
 import { $previews } from "../store/previews";
 import { useStore } from "@nanostores/react";
+import { sortByKey } from "../utils/sort";
 
 export default function TableList() {
   const previews = useStore($previews);
+  console.log({ previews });
 
-  function sortByKey(array: any[], key: string) {
-    return array.sort(function (a, b) {
-      var x = a[key];
-      var y = b[key];
-      return x < y ? -1 : x > y ? 1 : 0;
-    });
-  }
   return (
     <div className="h-full overflow-auto flex flex-col justify-start mt-4">
       <h4 className="text-xs uppercase mb-2">Tables</h4>

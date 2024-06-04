@@ -21,7 +21,9 @@ def call_script_in_subprocess(script: str):
 
 
 def preview_exec_script(preview: str):
-    return f"""\nimport json
+    return f"""
+import json
+
 data = pd.DataFrame({preview})
 try:
     res = handler(data).to_dict(orient='records')
@@ -33,7 +35,8 @@ print(json.dumps(res))
 
 
 def db_exec_script(table_name: str, connection_string: str):
-    return f"""\nfrom sqlmodel import create_engine
+    return f"""
+from sqlmodel import create_engine
 
 engine = create_engine('{connection_string}')
 

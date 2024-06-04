@@ -10,6 +10,7 @@ export default function AddConnection() {
   const connection = useStore($connection);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   async function handleTest() {
     setLoading(true);
@@ -26,12 +27,13 @@ export default function AddConnection() {
           limit: $previewLimit.get(),
         }),
       });
+
       if (res.ok) {
         const data = await res.json();
         $previews.set(data);
-        setLoading(false);
         // redirect to the tweaks page
-        window.location.href = "/tweaks";
+        setLoading(false);
+        setSuccess(true);
       }
     } catch (error) {
       console.log(error);
@@ -53,14 +55,23 @@ export default function AddConnection() {
         onChange={(e) => $connection.set(e.target.value)}
       />
       <div className="flex justify-center w-full">
-        <button
-          className={`btn btn-sm btn-accent transition-all duration-1000 mt-10 ${error ? "btn-error" : ""}`}
-          onClick={() => {
-            handleTest();
-          }}
-        >
-          {loading ? `Loading...` : `Create connection`}
-        </button>
+        {success ? (
+          <a
+            href="/tweaks"
+            className={`btn btn-sm btn-accent transition-all duration-1000 mt-10`}
+          >
+            Continue
+          </a>
+        ) : (
+          <button
+            className={`btn btn-sm btn-accent transition-all duration-1000 mt-10 ${error ? "btn-error" : ""}`}
+            onClick={() => {
+              handleTest();
+            }}
+          >
+            {loading ? `Loading...` : `Create connection`}
+          </button>
+        )}
       </div>
     </div>
   );
