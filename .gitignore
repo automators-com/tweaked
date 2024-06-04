@@ -20,7 +20,6 @@ pnpm-debug.log*
 # macOS-specific files
 .DS_Store
 src-tauri/gen/
-src-tauri/capabilities/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

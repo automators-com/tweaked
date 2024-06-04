@@ -1,0 +1,17 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "main-capability",
+  "description": "Capability for the main window",
+  "windows": ["main"],
+  "local": true,
+  "permissions": [
+    "window:default",
+    "window:allow-start-dragging",
+    "path:default",
+    "event:default",
+    "app:default",
+    "resources:default",
+    "menu:default",
+    "tray:default"
+  ]
+}

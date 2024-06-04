@@ -60,7 +60,10 @@ export default function Table() {
                     <tr key={index} className="hover">
                       {Object.values(row).map((value, index) => {
                         return (
-                          <td className="truncate text-xs" key={index}>
+                          <td
+                            className="truncate text-xs select-text"
+                            key={index}
+                          >
                             {value as string}
                           </td>
                         );

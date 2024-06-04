@@ -4,6 +4,10 @@
   --accent-dark: 49, 10, 101;
 }
 
+::selection {
+  @apply bg-accent text-accent-content;
+}
+
 html {
   @apply box-border overflow-hidden select-none;
 }
