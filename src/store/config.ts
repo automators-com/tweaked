@@ -7,7 +7,7 @@ export const $connection = persistentAtom<string>(
 
 export const $baseUrl = persistentAtom<string>(
   "baseUrl",
-  "http://localhost:8000",
+  "https://tweaked.onrender.com",
 );
 
 export const $selectedTable = persistentAtom<string>("selectedTable", "");
