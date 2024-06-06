@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import { useStore } from "@nanostores/react";
-import { $connection, $baseUrl, $previewLimit } from "../store/config";
-import { $previews } from "../store/previews";
+import { $connection, $baseUrl, $previewLimit } from "@/store/config";
+import { $previews } from "@/store/previews";
+import toast from "react-hot-toast";
+import Link from "next/link";
 
 export default function AddConnection() {
   const baseUrl = useStore($baseUrl);
@@ -35,13 +37,10 @@ export default function AddConnection() {
         setLoading(false);
         setSuccess(true);
       }
+      toast.error("Could not connect to the database");
     } catch (error) {
-      console.log(error);
       setError(true);
       setLoading(false);
-      setTimeout(() => {
-        setError(false);
-      }, 3000);
     }
   }
 
@@ -56,12 +55,12 @@ export default function AddConnection() {
       />
       <div className="flex justify-center w-full">
         {success ? (
-          <a
+          <Link
             href="/tweaks"
             className={`btn btn-sm btn-accent transition-all duration-1000 mt-10`}
           >
             Continue
-          </a>
+          </Link>
         ) : (
           <button
             className={`btn btn-sm btn-accent transition-all duration-1000 mt-10 ${error ? "btn-error" : ""}`}

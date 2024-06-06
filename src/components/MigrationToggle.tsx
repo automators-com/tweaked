@@ -1,7 +1,7 @@
 "use client";
 
 import { useStore } from "@nanostores/react";
-import { $nav, toggleRightNav } from "../store/nav";
+import { $nav, toggleRightNav } from "@/store/nav";
 
 export default function MigrationToggle() {
   const nav = useStore($nav);

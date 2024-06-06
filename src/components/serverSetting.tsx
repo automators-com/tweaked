@@ -1,6 +1,6 @@
 "use client";
 import { useStore } from "@nanostores/react";
-import { $baseUrl, $previewLimit } from "../store/config";
+import { $baseUrl, $previewLimit } from "@/store/config";
 
 export default function ServerSetting() {
   const baseUrl = useStore($baseUrl);

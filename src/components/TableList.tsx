@@ -1,13 +1,12 @@
 "use client";
 
-import { $selectedTable } from "../store/config";
-import { $previews } from "../store/previews";
+import { $selectedTable } from "@/store/config";
+import { $previews } from "@/store/previews";
 import { useStore } from "@nanostores/react";
-import { sortByKey } from "../utils/sort";
+import { sortByKey } from "@/utils/sort";
 
 export default function TableList() {
   const previews = useStore($previews);
-  console.log({ previews });
 
   return (
     <div className="h-full overflow-auto flex flex-col justify-start mt-4">
