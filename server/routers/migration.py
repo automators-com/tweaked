@@ -72,7 +72,7 @@ async def generate_migration_file(req: NewMigration):
     # replace the code block markdown
     script = script.replace(
         "```python\n",
-        "",
+        f"# prompt: {req.prompt}\n",
     ).replace("```", "")
 
     # upload the script to a bucket
