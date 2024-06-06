@@ -1,9 +1,10 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import SearchBar from "./searchBar";
 import { useStore } from "@nanostores/react";
-import { $selectedTable } from "../store/config";
-import { $previews } from "../store/previews";
+import { $selectedTable } from "@/store/config";
+import { $previews } from "@/store/previews";
 
 export default function Table() {
   const selectedTable = useStore($selectedTable);
@@ -22,7 +23,7 @@ export default function Table() {
     if (selectedPreview) {
       setSelectedPreview(selectedPreview);
     }
-  }, [selectedTable]);
+  }, [selectedTable, previews]);
 
   if (selectedTable === "") {
     return (

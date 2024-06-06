@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useStore } from "@nanostores/react";
-import { $baseUrl, $selectedTable } from "../store/config";
+import { $baseUrl, $selectedTable } from "@/store/config";
 
 export default function SearchBar({
   preview,

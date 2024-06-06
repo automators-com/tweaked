@@ -1,5 +1,7 @@
+"use client";
+
 import { useStore } from "@nanostores/react";
-import { $nav, toggleRightNav } from "../store/nav";
+import { $nav, toggleRightNav } from "@/store/nav";
 import RunMigrations from "./runMigrations";
 
 export default function Migrationbar() {
@@ -33,7 +35,6 @@ export default function Migrationbar() {
           </svg>
         </button>
       </div>
-      {/* <div className="h-full overflow-auto pt-2">Not available</div> */}
       <div>
         <RunMigrations />
       </div>

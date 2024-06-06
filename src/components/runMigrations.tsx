@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { $connection, $selectedTable, $baseUrl } from "../store/config";
-import { $previews } from "../store/previews";
-import { lookupTableName } from "../utils/tables";
+import { $connection, $selectedTable, $baseUrl } from "@/store/config";
+import { $previews } from "@/store/previews";
+import { lookupTableName } from "@/utils/tables";
 
 export default function RunMigrations() {
   const [loading, setLoading] = useState(false);

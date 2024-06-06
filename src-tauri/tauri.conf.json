@@ -2,8 +2,8 @@
   "build": {
     "beforeBuildCommand": "pnpm run build",
     "beforeDevCommand": "pnpm run dev",
-    "frontendDist": "../dist",
-    "devUrl": "http://localhost:4321"
+    "frontendDist": "../out",
+    "devUrl": "http://localhost:3000"
   },
   "bundle": {
     "active": true,
