@@ -1,9 +1,11 @@
 "use client";
 
 import React from "react";
+import { themes } from "@/utils/themes";
+import { useTheme } from "next-themes";
 
 function ThemeChanger({ align }: { align?: string }) {
-  const themes = ["automators", "light", "dark", "cupcake", "garden"];
+  const { setTheme } = useTheme();
   return (
     <div className={`dropdown ${align ?? ``} mb-72`} data-choose-theme>
       <div tabIndex={0} role="button" className="btn btn-sm m-1">
@@ -29,7 +31,10 @@ function ThemeChanger({ align }: { align?: string }) {
                 name="theme-dropdown"
                 className="theme-controller capitalize btn btn-sm btn-block btn-ghost justify-start"
                 aria-label={theme}
-                data-set-theme={theme}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setTheme(theme);
+                }}
               >
                 {theme}
               </button>

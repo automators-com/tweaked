@@ -5,18 +5,16 @@ import { useStore } from "@nanostores/react";
 import { $connection, $baseUrl, $previewLimit } from "@/store/config";
 import { $previews } from "@/store/previews";
 import toast from "react-hot-toast";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function AddConnection() {
+  const router = useRouter();
   const baseUrl = useStore($baseUrl);
   const connection = useStore($connection);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
-  const [success, setSuccess] = useState(false);
 
   async function handleTest() {
     setLoading(true);
-    setError(false);
 
     try {
       const res = await fetch(`${baseUrl}/data/previews`, {
@@ -34,12 +32,12 @@ export default function AddConnection() {
         const data = await res.json();
         $previews.set(data);
         // redirect to the tweaks page
-        setLoading(false);
-        setSuccess(true);
+        router.push("/tweaks");
       }
-      toast.error("Could not connect to the database");
     } catch (error) {
-      setError(true);
+      if (error instanceof Error) {
+        toast.error(error.message);
+      }
       setLoading(false);
     }
   }
@@ -54,23 +52,14 @@ export default function AddConnection() {
         onChange={(e) => $connection.set(e.target.value)}
       />
       <div className="flex justify-center w-full">
-        {success ? (
-          <Link
-            href="/tweaks"
-            className={`btn btn-sm btn-accent transition-all duration-1000 mt-10`}
-          >
-            Continue
-          </Link>
-        ) : (
-          <button
-            className={`btn btn-sm btn-accent transition-all duration-1000 mt-10 ${error ? "btn-error" : ""}`}
-            onClick={() => {
-              handleTest();
-            }}
-          >
-            {loading ? `Loading...` : `Create connection`}
-          </button>
-        )}
+        <button
+          className={`btn btn-sm btn-accent transition-all duration-1000 mt-10`}
+          onClick={() => {
+            handleTest();
+          }}
+        >
+          {loading ? `Loading...` : `Create connection`}
+        </button>
       </div>
     </div>
   );

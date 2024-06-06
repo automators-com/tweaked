@@ -1,16 +1,13 @@
 "use client";
 
 import React from "react";
-import { useEffect } from "react";
-import { themeChange } from "theme-change";
+import { ThemeProvider } from "next-themes";
 import { Toaster } from "react-hot-toast";
+import { themes } from "@/utils/themes";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
-  useEffect(() => {
-    themeChange(false);
-  }, []);
   return (
-    <>
+    <ThemeProvider defaultTheme="automators" themes={themes}>
       {children}
       <Toaster
         toastOptions={{
@@ -28,6 +25,6 @@ export default function Providers({ children }: { children: React.ReactNode }) {
           },
         }}
       />
-    </>
+    </ThemeProvider>
   );
 }
