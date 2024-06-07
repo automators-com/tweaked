@@ -1,7 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { $connection, $selectedTable, $baseUrl } from "@/store/config";
+import {
+  $connection,
+  $selectedTable,
+  $baseUrl,
+  $fingerprint,
+} from "@/store/config";
 import { $previews } from "@/store/previews";
 import { lookupTableName } from "@/utils/tables";
 
@@ -18,7 +23,8 @@ export default function RunMigrations() {
       },
       body: JSON.stringify({
         table_name: lookupTableName($selectedTable.get(), $previews.get()),
-        folder: $selectedTable.get(),
+        table_id: $selectedTable.get(),
+        user_id: $fingerprint.get(),
         connection_string: $connection.get(),
       }),
     });

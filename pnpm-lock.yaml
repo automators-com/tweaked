@@ -17,12 +17,18 @@ importers:
       '@tailwindcss/typography':
         specifier: ^0.5.13
         version: 0.5.13(tailwindcss@3.4.3)
+      '@tanstack/react-query':
+        specifier: ^5.40.1
+        version: 5.40.1(react@19.0.0-rc-f994737d14-20240522)
       '@tauri-apps/api':
         specifier: ^1.5.6
         version: 1.5.6
       '@tauri-apps/cli':
         specifier: 2.0.0-beta.20
         version: 2.0.0-beta.20
+      '@thumbmarkjs/thumbmarkjs':
+        specifier: ^0.14.8
+        version: 0.14.8
       '@types/react':
         specifier: ^18.3.3
         version: 18.3.3
@@ -362,6 +368,14 @@ packages:
     peerDependencies:
       tailwindcss: '>=3.0.0 || insiders'
 
+  '@tanstack/query-core@5.40.0':
+    resolution: {integrity: sha512-eD8K8jsOIq0Z5u/QbvOmfvKKE/XC39jA7yv4hgpl/1SRiU+J8QCIwgM/mEHuunQsL87dcvnHqSVLmf9pD4CiaA==}
+
+  '@tanstack/react-query@5.40.1':
+    resolution: {integrity: sha512-gOcmu+gpFd2taHrrgMM9RemLYYEDYfsCqszxCC0xtx+csDa4R8t7Hr7SfWXQP13S2sF+mOxySo/+FNXJFYBqcA==}
+    peerDependencies:
+      react: ^18.0.0
+
   '@tauri-apps/api@1.5.6':
     resolution: {integrity: sha512-LH5ToovAHnDVe5Qa9f/+jW28I6DeMhos8bNDtBOmmnaDpPmJmYLyHdeDblAWWWYc7KKRDg9/66vMuKyq0WIeFA==}
     engines: {node: '>= 14.6.0', npm: '>= 6.6.0', yarn: '>= 1.19.1'}
@@ -430,6 +444,9 @@ packages:
     resolution: {integrity: sha512-707q9uIc2oNrYHd2dtMvxTrpZXVpart5EIktnRymNOpphkLlB6WUBjHD+ga45WqTU6cNGKbYvkKqTNfshNul9Q==}
     engines: {node: '>= 10'}
     hasBin: true
+
+  '@thumbmarkjs/thumbmarkjs@0.14.8':
+    resolution: {integrity: sha512-J+/HnYBv24ufFCoyqbFhtZk1zTGKWzHfyN15sc6kJq/1D/6H1oaKt+W1yWxkUwzclMS1n36EaoHbNjFeiuDqDg==}
 
   '@types/json5@0.0.29':
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
@@ -2070,6 +2087,13 @@ snapshots:
       postcss-selector-parser: 6.0.10
       tailwindcss: 3.4.3
 
+  '@tanstack/query-core@5.40.0': {}
+
+  '@tanstack/react-query@5.40.1(react@19.0.0-rc-f994737d14-20240522)':
+    dependencies:
+      '@tanstack/query-core': 5.40.0
+      react: 19.0.0-rc-f994737d14-20240522
+
   '@tauri-apps/api@1.5.6': {}
 
   '@tauri-apps/cli-darwin-arm64@2.0.0-beta.20':
@@ -2114,6 +2138,8 @@ snapshots:
       '@tauri-apps/cli-win32-arm64-msvc': 2.0.0-beta.20
       '@tauri-apps/cli-win32-ia32-msvc': 2.0.0-beta.20
       '@tauri-apps/cli-win32-x64-msvc': 2.0.0-beta.20
+
+  '@thumbmarkjs/thumbmarkjs@0.14.8': {}
 
   '@types/json5@0.0.29': {}
 
