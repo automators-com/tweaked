@@ -2,7 +2,13 @@
 
 import { useState } from "react";
 import { useStore } from "@nanostores/react";
-import { $baseUrl, $selectedTable } from "@/store/config";
+import {
+  $baseUrl,
+  $selectedTable,
+  $connection,
+  $fingerprint,
+} from "@/store/config";
+import { hash } from "crypto";
 
 export default function SearchBar({
   preview,
@@ -30,7 +36,9 @@ export default function SearchBar({
         body: JSON.stringify({
           prompt,
           preview,
-          folder: $selectedTable.get() ?? "unknown",
+          user_id: $fingerprint.get(),
+          connection_string: $connection.get(),
+          table_id: $selectedTable.get(),
         }),
       });
       if (res.ok) {

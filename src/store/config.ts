@@ -1,5 +1,10 @@
 import { persistentAtom } from "@nanostores/persistent";
 
+export const $fingerprint = persistentAtom<string | undefined>(
+  "fingerprint",
+  undefined,
+);
+
 export const $connection = persistentAtom<string>(
   "connection",
   "postgres://user:password@localhost:5432/dbname",

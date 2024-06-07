@@ -1,7 +1,7 @@
 "use client";
 
 import MigrationToggle from "@/components/MigrationToggle";
-import Migrationbar from "@/components/MigrationBar";
+import MigrationBar from "@/components/MigrationBar";
 import Navbar from "@/components/Navbar";
 import TitleBar from "@/components/TitleBar";
 import dynamic from "next/dynamic";
@@ -21,7 +21,7 @@ export default function Page() {
           </div>
         </main>
 
-        <Migrationbar />
+        <MigrationBar />
       </div>
     </>
   );

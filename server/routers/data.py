@@ -4,8 +4,8 @@ from sqlmodel import create_engine
 from sqlalchemy import Engine
 import pandas as pd
 import numpy as np
-import uuid
 from utils.db_helpers import use_psycopg_protocol
+import hashlib
 
 router = APIRouter()
 
@@ -33,7 +33,7 @@ async def fetch_database_table_previews(db_info: DatabaseInfo):
     with engine.connect() as connection:
         for pos, item in enumerate(previews):
             # generate a random uuid for each table
-            item["id"] = uuid.uuid4()
+            item["id"] = hashlib.md5(item["table_name"].encode()).hexdigest()
             table_name = item["table_name"]
             # fetch the first 5 rows of each table
             table_preview = pd.read_sql(

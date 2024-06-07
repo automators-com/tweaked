@@ -1,5 +1,6 @@
 import boto3
 import os
+import hashlib
 from botocore.client import Config
 from dotenv import load_dotenv
 
@@ -81,3 +82,15 @@ def list_files_in_folder(folder_prefix):
     except Exception as e:
         print(e)
         return None
+
+
+def get_folder_name(user_id: str, connection_string: str, table_id: str) -> str:
+    # format folder structure as 'user_id/connection_string/table_name'
+    hashed_con_str = hashlib.md5(connection_string.encode()).hexdigest()
+    folder = f"{user_id}/{hashed_con_str}"
+
+    # if a table id is provided, add it to the folder structure
+    if table_id is not None:
+        folder = f"{folder}/{table_id}"
+
+    return folder

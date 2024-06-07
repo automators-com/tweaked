@@ -3,9 +3,11 @@
 import { useStore } from "@nanostores/react";
 import { $nav, toggleRightNav } from "@/store/nav";
 import RunMigrations from "./runMigrations";
+import useTweaks from "@/hooks/useTweaks";
 
-export default function Migrationbar() {
+export default function MigrationBar() {
   const nav = useStore($nav);
+  const { data } = useTweaks();
 
   if (!nav.rightOpen) {
     return null;
@@ -34,6 +36,23 @@ export default function Migrationbar() {
             />
           </svg>
         </button>
+      </div>
+      <div className="h-full flex flex-col items-start gap-y-2">
+        {data?.length === 0 ? (
+          <div className="w-full bg-base-100 hover:bg-opacity-50 cursor-pointer p-3 text-xs truncate rounded-md">
+            No tweaks yet
+          </div>
+        ) : (
+          data?.map((migration, index) => (
+            <div
+              title={migration.prompt}
+              key={index}
+              className="w-full bg-base-100 hover:bg-opacity-50 cursor-pointer p-3 text-xs truncate rounded-md"
+            >
+              {migration.prompt}
+            </div>
+          ))
+        )}
       </div>
       <div>
         <RunMigrations />
