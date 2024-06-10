@@ -43,10 +43,8 @@
   "identifier": "ai.tweaked",
   "plugins": {
     "updater": {
-      "endpoints": [
-        "https://github.com/automators-com/tweaked/releases/latest/download/latest.json"
-      ],
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDI3MzJCMUVENzlBOTlERkEKUldUNm5hbDU3YkV5SjI4ZmJKSDdJV0ZZUjhnUnRhRWRjdmkvR2RVdm4zVFlUeFBuSCtyMzlBOSsK"
+      "endpoints": ["https://tweaked.onrender.com/updater"],
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEUxQTNBNjQzQzIxQjk5QzkKUldUSm1SdkNRNmFqNFJuUkI2S3ZGWUU1enIwRnhRK0N0Mzh6MHpCWTZOdkhNRyt4WlpESlBHV0kK"
     }
   },
   "app": {
