@@ -4,7 +4,7 @@ import { useStore } from "@nanostores/react";
 import { $nav, toggleRightNav } from "@/store/nav";
 import RunMigrations from "./runMigrations";
 
-export default function Migrationbar() {
+export default function MigrationBar() {
   const nav = useStore($nav);
 
   if (!nav.rightOpen) {
