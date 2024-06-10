@@ -41,7 +41,14 @@
   },
   "productName": "Tweaked",
   "identifier": "ai.tweaked",
-  "plugins": {},
+  "plugins": {
+    "updater": {
+      "endpoints": [
+        "https://github.com/automators-com/tweaked/releases/latest/download/latest.json"
+      ],
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDI3MzJCMUVENzlBOTlERkEKUldUNm5hbDU3YkV5SjI4ZmJKSDdJV0ZZUjhnUnRhRWRjdmkvR2RVdm4zVFlUeFBuSCtyMzlBOSsK"
+    }
+  },
   "app": {
     "withGlobalTauri": true,
     "macOSPrivateApi": true,
