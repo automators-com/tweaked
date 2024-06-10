@@ -11,6 +11,7 @@ from utils.storage import (
     upload_string_to_bucket,
     list_files_in_folder,
     get_file_content_from_bucket,
+    get_folder_name,
 )
 from utils.execution_scripts import (
     call_script_in_subprocess,
@@ -34,6 +35,9 @@ router = APIRouter()
 class NewMigration(BaseModel):
     prompt: str
     preview: list[dict] | None = None
+    user_id: str | None = None
+    connection_string: str | None = None
+    table_id: str | None = None
     folder: str | None = "test"
 
 
@@ -72,12 +76,15 @@ async def generate_migration_file(req: NewMigration):
     # replace the code block markdown
     script = script.replace(
         "```python\n",
-        "",
+        f"# prompt: {req.prompt}\n",
     ).replace("```", "")
 
+    # create a unique file name - this can be easily ordered
+    file_name = f"{datetime.now().strftime('%Y%m%d%H%M%S')}"
+    folder = get_folder_name(req.user_id, req.connection_string, req.table_id)
+
     # upload the script to a bucket
-    file_name = f"tweak_{datetime.now().strftime('%Y%m%d%H%M%S')}"
-    success = upload_string_to_bucket(script, f"{req.folder}/{file_name}.py")
+    success = upload_string_to_bucket(script, f"{folder}/{file_name}.py")
     print(f"File uploaded: {success}")
 
     # append the preview execution script
@@ -96,15 +103,35 @@ async def generate_migration_file(req: NewMigration):
         return json.loads(result.stdout)
 
 
-@router.get("/migrations/{id}")
-async def get_migrations(id: str):
+class FetchMigrations(BaseModel):
+    user_id: str
+    connection_string: str
+    table_id: str
+
+
+@router.post("/migrations/list")
+async def get_migrations(req: FetchMigrations):
+    folder = get_folder_name(req.user_id, req.connection_string, req.table_id)
     # get the list of files in the folder
-    files = list_files_in_folder(id)
-    return files or []
+    files = list_files_in_folder(folder)
+    print(files)
+    res = []
+
+    # get the content of each file
+    for file in files:
+        # fetch the file content
+        script = get_file_content_from_bucket(file)
+        # extract the prompt from the first line
+        prompt = script.split("\n")[0].replace("# prompt: ", "")
+        print(script)
+        res.append({"url": file, "prompt": prompt, "script": script})
+
+    return res
 
 
 class RunMigration(BaseModel):
-    folder: str
+    user_id: str
+    table_id: str | None = None
     table_name: str
     connection_string: str
 
@@ -113,7 +140,8 @@ class RunMigration(BaseModel):
 async def run_migration(req: RunMigration):
     print(req)
     # get the list of migrations to run
-    files = list_files_in_folder(req.folder)
+    folder = get_folder_name(req.user_id, req.connection_string, req.table_id)
+    files = list_files_in_folder(folder)
     print(files)
 
     for file in files:
