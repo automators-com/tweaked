@@ -5,15 +5,8 @@ import { relaunch } from "@tauri-apps/plugin-process";
 
 export async function checkForAppUpdates(onUserClick: false) {
   const update = await check();
-  console.log({ update });
-  if (update === null) {
-    console.log("Failed to check for updates.");
-    await message("Failed to check for updates.\nPlease try again later.", {
-      title: "Error",
-      kind: "error",
-      okLabel: "OK",
-    });
-    return;
+  if (!update?.available) {
+    console.log("No update available");
   } else if (update?.available) {
     console.log("Update available!", update.version, update.body);
     const yes = await ask(
@@ -27,11 +20,7 @@ export async function checkForAppUpdates(onUserClick: false) {
     );
     if (yes) {
       await update.downloadAndInstall();
-      // Restart the app after the update is installed by calling the Tauri command that handles restart for your app
-      // It is good practice to shut down any background processes gracefully before restarting
-      // As an alternative, you could ask the user to restart the app manually
       await relaunch();
-      console.log("Restart");
     }
   } else if (onUserClick) {
     await message("You are on the latest version. Stay awesome!", {
