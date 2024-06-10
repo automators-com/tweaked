@@ -7,6 +7,7 @@ import { themes } from "@/utils/themes";
 import { getFingerprint } from "@thumbmarkjs/thumbmarkjs";
 import { $fingerprint } from "@/store/config";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import { checkForAppUpdates } from "@/utils/updater";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   const queryClient = new QueryClient({});
@@ -18,6 +19,11 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         $fingerprint.set(fingerprint as string);
       });
     }
+  }, []);
+
+  useEffect(() => {
+    // check for updates
+    checkForAppUpdates(false);
   }, []);
 
   return (
