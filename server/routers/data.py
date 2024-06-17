@@ -1,10 +1,9 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
 from sqlmodel import create_engine
-from sqlalchemy import Engine
 import pandas as pd
 import numpy as np
-from utils.db_helpers import use_psycopg_protocol
+from utils.db_helpers import use_psycopg_protocol, fetch_table_stats
 import hashlib
 
 router = APIRouter()
@@ -13,16 +12,6 @@ router = APIRouter()
 class DatabaseInfo(BaseModel):
     connection_string: str = "postgres://user:password@localhost:5432/db"
     limit: int = 5
-
-
-async def fetch_table_stats(engine: Engine):
-    with engine.connect() as connection:
-        schema_name = "public"  # TODO: create a function to determine schema name
-        stats = pd.read_sql(
-            f"""SELECT relname as table_name, n_live_tup as table_row_count FROM pg_stat_all_tables WHERE schemaname = '{schema_name}';""",
-            con=connection,
-        )
-        return stats.to_dict(orient="records")
 
 
 @router.post("/data/previews")
