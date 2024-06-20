@@ -6,14 +6,14 @@ from fastapi import APIRouter, HTTPException
 from openai import OpenAI
 from pydantic import BaseModel
 
-from utils.db_helpers import use_psycopg_protocol
-from utils.storage import (
+from ..utils.db_helpers import use_psycopg_protocol
+from ..utils.storage import (
     upload_string_to_bucket,
     list_files_in_folder,
     get_file_content_from_bucket,
     get_folder_name,
 )
-from utils.execution_scripts import (
+from ..utils.execution_scripts import (
     call_script_in_subprocess,
     preview_exec_script,
     db_exec_script,

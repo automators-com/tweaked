@@ -1,5 +1,7 @@
 from sqlalchemy.engine import Engine
 import pandas as pd
+import subprocess
+from io import StringIO
 
 
 def use_psycopg_protocol(url: str) -> str:
@@ -18,3 +20,31 @@ async def fetch_table_stats(engine: Engine):
             con=connection,
         )
         return stats.to_dict(orient="records")
+
+
+def dump_schema(connection_string):
+    # Construct the pg_dump command
+    command = ["pg_dump", "-C", connection_string, "-s"]
+
+    # Execute the command and capture the output
+    process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    stdout, stderr = process.communicate()
+
+    # Check for errors
+    if process.returncode != 0:
+        raise Exception(f"Error executing pg_dump: {stderr.decode('utf-8')}")
+
+    # Filter out the CREATE TABLE statement for the specific table
+    statements = []
+    capturing = False
+    for line in StringIO(stdout.decode("utf-8")):
+        if capturing:
+            statements.append(line.strip())
+            if line.strip().endswith(";"):
+                capturing = False
+        elif line.strip().startswith("CREATE TABLE"):
+            capturing = True
+            statements.append(line.strip())
+
+    # Return the CREATE TABLE statements as a single string
+    return "\n".join(statements)
