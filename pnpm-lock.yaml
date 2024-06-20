@@ -21,8 +21,8 @@ importers:
         specifier: ^5.40.1
         version: 5.40.1(react@19.0.0-rc-f994737d14-20240522)
       '@tauri-apps/api':
-        specifier: ^1.5.6
-        version: 1.5.6
+        specifier: 2.0.0-beta.13
+        version: 2.0.0-beta.13
       '@tauri-apps/cli':
         specifier: 2.0.0-beta.20
         version: 2.0.0-beta.20
@@ -384,10 +384,6 @@ packages:
     resolution: {integrity: sha512-gOcmu+gpFd2taHrrgMM9RemLYYEDYfsCqszxCC0xtx+csDa4R8t7Hr7SfWXQP13S2sF+mOxySo/+FNXJFYBqcA==}
     peerDependencies:
       react: ^18.0.0
-
-  '@tauri-apps/api@1.5.6':
-    resolution: {integrity: sha512-LH5ToovAHnDVe5Qa9f/+jW28I6DeMhos8bNDtBOmmnaDpPmJmYLyHdeDblAWWWYc7KKRDg9/66vMuKyq0WIeFA==}
-    engines: {node: '>= 14.6.0', npm: '>= 6.6.0', yarn: '>= 1.19.1'}
 
   '@tauri-apps/api@2.0.0-beta.13':
     resolution: {integrity: sha512-Np1opKANzRMF3lgJ9gDquBCB9SxlE2lRmNpVx1+L6RyzAmigkuh0ZulT5jMnDA3JLsuSDU135r/s4t/Pmx4atg==}
@@ -2115,8 +2111,6 @@ snapshots:
     dependencies:
       '@tanstack/query-core': 5.40.0
       react: 19.0.0-rc-f994737d14-20240522
-
-  '@tauri-apps/api@1.5.6': {}
 
   '@tauri-apps/api@2.0.0-beta.13': {}
 
