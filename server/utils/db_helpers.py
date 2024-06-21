@@ -1,4 +1,5 @@
 from sqlalchemy.engine import Engine
+from sqlalchemy.exc import SQLAlchemyError
 import pandas as pd
 import subprocess
 from io import StringIO
@@ -20,6 +21,14 @@ async def fetch_table_stats(engine: Engine):
             con=connection,
         )
         return stats.to_dict(orient="records")
+
+
+def test_connection(engine: Engine) -> str:
+    try:
+        with engine.connect():
+            return "ok"
+    except SQLAlchemyError as e:
+        return str(e.__dict__["orig"])
 
 
 def dump_schema(connection_string):

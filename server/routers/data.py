@@ -1,9 +1,9 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from sqlmodel import create_engine
 import pandas as pd
 import numpy as np
-from ..utils.db_helpers import use_psycopg_protocol, fetch_table_stats
+from ..utils.db_helpers import use_psycopg_protocol, fetch_table_stats, test_connection
 import hashlib
 
 router = APIRouter()
@@ -17,6 +17,11 @@ class DatabaseInfo(BaseModel):
 @router.post("/data/previews")
 async def fetch_database_table_previews(db_info: DatabaseInfo):
     engine = create_engine(use_psycopg_protocol(db_info.connection_string))
+
+    message = test_connection(engine)
+    if message != "ok":
+        raise HTTPException(status_code=400, detail=message)
+
     previews = await fetch_table_stats(engine)
 
     with engine.connect() as connection:
@@ -26,7 +31,8 @@ async def fetch_database_table_previews(db_info: DatabaseInfo):
             table_name = item["table_name"]
             # fetch the first 5 rows of each table
             table_preview = pd.read_sql(
-                f"""SELECT * FROM "{table_name}" LIMIT {db_info.limit}""", connection
+                f"""SELECT * FROM "{table_name}" LIMIT {db_info.limit}""",
+                connection,
             )
 
             table_preview.replace({np.nan: None}, inplace=True)
