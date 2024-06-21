@@ -10,9 +10,7 @@ def call_script_in_subprocess(script: str):
         temp_file_path = temp_file.name
 
     # Execute the temporary Python file in a subprocess
-    result = subprocess.run(
-        ["../.venv/bin/python", temp_file_path], capture_output=True, text=True
-    )
+    result = subprocess.run(["python3", temp_file_path], capture_output=True, text=True)
 
     # Clean up the temporary file
     os.remove(temp_file_path)
@@ -79,5 +77,11 @@ with engine.connect() as connection:
         connection.execute(
             text(f'''UPDATE "{table_name}" {r"SET {col} = tmp.{col} FROM tmp WHERE"} "{table_name}".{r"{primary_key} = tmp.{primary_key}"}''' )
         )
+    
     transaction.commit()
+
+# Drop the tmp table
+with engine.connect() as connection:
+    connection.execute(text(f"DROP TABLE tmp;"))
+
 """
