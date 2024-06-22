@@ -123,7 +123,6 @@ async def get_migrations(req: FetchMigrations):
     folder = get_folder_name(req.user_id, req.connection_string, req.table_id)
     # get the list of files in the folder
     files = list_files_in_folder(folder)
-    print(files)
     res = []
 
     # get the content of each file
@@ -132,7 +131,6 @@ async def get_migrations(req: FetchMigrations):
         script = get_file_content_from_bucket(file)
         # extract the prompt from the first line
         prompt = script.split("\n")[0].replace("# prompt: ", "")
-        print(script)
         res.append({"url": file, "prompt": prompt, "script": script})
 
     return res
