@@ -44,7 +44,7 @@ class NewMigration(BaseModel):
 @router.post("/migrations/new")
 async def generate_migration_file(req: NewMigration):
     if not req.prompt:
-        raise HTTPException(status_code=400, detail="prompt is required")
+        raise HTTPException(status_code=400, detail="A prompt is required")
 
     # add context to the prompt
     messages = [
@@ -95,9 +95,18 @@ async def generate_migration_file(req: NewMigration):
     result = call_script_in_subprocess(script)
 
     # Check for any errors
+    # TODO: Improve error messages
     if result.stderr:
         print("Errors from subprocess:")
-        return HTTPException(status_code=400, detail=result.stderr)
+        print(result.stderr)
+        # get the last line of the error
+        detail = result.stderr.split("\n")[-2]
+        if detail:
+            raise HTTPException(status_code=400, detail=detail)
+        else:
+            raise HTTPException(
+                status_code=400, detail="An error occurred while running the script."
+            )
     else:
         # return the updated preview
         return json.loads(result.stdout)
@@ -160,6 +169,13 @@ async def run_migration(req: RunMigration):
         if "success" in result.stdout:
             continue
         else:
-            return HTTPException(status_code=400, detail=result.stderr)
+            detail = result.stderr.split("\n")[-2]
+            if detail:
+                raise HTTPException(status_code=400, detail=detail)
+            else:
+                raise HTTPException(
+                    status_code=400,
+                    detail="An error occurred while running the script.",
+                )
 
     return "success"

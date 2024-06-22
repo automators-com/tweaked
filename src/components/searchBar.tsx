@@ -9,6 +9,7 @@ import {
   $fingerprint,
 } from "@/store/config";
 import { hash } from "crypto";
+import toast from "react-hot-toast";
 
 export default function SearchBar({
   preview,
@@ -46,6 +47,10 @@ export default function SearchBar({
         console.log(data);
         setSelectedPreview(data);
         setPrompt("");
+        setLoading(false);
+      } else {
+        const data = await res.json();
+        toast(data.detail);
         setLoading(false);
       }
     } catch (e) {

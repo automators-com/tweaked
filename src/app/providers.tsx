@@ -52,13 +52,8 @@ export default function Providers({ children }: { children: React.ReactNode }) {
             className: "",
             duration: 5000,
             style: {
-              background: "#363636",
-              color: "#fff",
-            },
-
-            // Default options for specific types
-            success: {
-              duration: 3000,
+              background: "oklch(var(--b3))",
+              color: "oklch(var(--bc))",
             },
           }}
         />
