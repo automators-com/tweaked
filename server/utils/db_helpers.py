@@ -58,5 +58,4 @@ def dump_schema(connection_string):
             statements.append(line.strip())
 
     # Return the CREATE TABLE statements as a single string
-    print("\n".join(statements))
     return "\n".join(statements)

@@ -19,6 +19,7 @@ from server.utils.execution_scripts import (
 )
 from server.utils.prompts import new_tweak_prompt
 from server.utils.openai import client
+from server.utils.logging import logger
 
 router = APIRouter()
 
@@ -34,7 +35,9 @@ class NewMigration(BaseModel):
 
 @router.post("/migrations/new")
 async def generate_migration_file(req: NewMigration):
+    logger.info(f"Generating tweak for {req.user_id}")
     if not req.prompt:
+        logger.error(f"No prompt provided by {req.user_id}")
         raise HTTPException(status_code=400, detail="A prompt is required")
 
     # add context to the prompt
@@ -47,6 +50,7 @@ async def generate_migration_file(req: NewMigration):
             }
         )
     messages.append({"role": "user", "content": req.prompt})
+    logger.info(f"Tweak prompt: {req.prompt}")
 
     # create the completion using AI
     res = client.chat.completions.create(
@@ -66,12 +70,13 @@ async def generate_migration_file(req: NewMigration):
     folder = get_folder_name(req.user_id, req.connection_string, req.table_id)
 
     # upload the script to a bucket
+    logger.info(f"Uploading file to {folder}/{file_name}.py")
     success = upload_string_to_bucket(script, f"{folder}/{file_name}.py")
-    print(f"File uploaded: {success}")
+    logger.info(f"File uploaded: {success}")
 
     # append the preview execution script
     script += preview_exec_script(req.preview)
-    print(script)
+    logger.info("AI created the script:\n", script)
 
     # Execute the temporary Python file in a subprocess
     result = call_script_in_subprocess(script)
@@ -79,8 +84,7 @@ async def generate_migration_file(req: NewMigration):
     # Check for any errors
     # TODO: Improve error messages
     if result.stderr:
-        print("Errors from subprocess:")
-        print(result.stderr)
+        logger.error(result.stderr)
         # get the last line of the error
         detail = result.stderr.split("\n")[-2]
         if detail:
@@ -102,6 +106,7 @@ class FetchMigrations(BaseModel):
 
 @router.post("/migrations/list")
 async def get_migrations(req: FetchMigrations):
+    logger.info(f"Fetching migrations for user {req.user_id}")
     folder = get_folder_name(req.user_id, req.connection_string, req.table_id)
     # get the list of files in the folder
     files = list_files_in_folder(folder)
@@ -115,6 +120,7 @@ async def get_migrations(req: FetchMigrations):
         prompt = script.split("\n")[0].replace("# prompt: ", "")
         res.append({"url": file, "prompt": prompt, "script": script})
 
+    logger.info(f"Returning {len(res)} migrations")
     return res
 
 
@@ -163,6 +169,8 @@ class DeleteMigrations(BaseModel):
 
 @router.delete("/migrations/delete/all")
 async def delete_all_migrations(req: DeleteMigrations):
+    logger.info(f"Deleting all migrations for user {req.user_id}")
     folder = get_folder_name(req.user_id, req.connection_string, None)
     success = delete_all_files_in_folder(folder)
+    logger.info(f"Deletion success: {success}")
     return {"success": success}

@@ -9,6 +9,7 @@ from sqlalchemy import text, create_engine
 from datamaker import generate_data
 from importlib import import_module
 from pathlib import Path
+from server.utils.logging import logger
 
 from server.utils.db_helpers import (
     use_psycopg_protocol,
@@ -59,14 +60,11 @@ class GenerateRequest(BaseModel):
 
 @router.post("/data/generate")
 async def generate_data_from_schema(req: GenerateRequest):
-    print("Generating data from schema")
+    logger.info("Generating data from schema")
     engine = create_engine(use_psycopg_protocol(req.connection_string))
-
-    # create a tmp folder in the current working directory
 
     with tempfile.NamedTemporaryFile(dir="./server", delete=True, suffix=".py") as f:
         f.write(req.db_schema.encode())
-        print(f"server.{f.name}")
         tmp_file_name = f.name.split("/")[-1].split(".")[0]
         schema = import_module(f"server.{tmp_file_name}")
 

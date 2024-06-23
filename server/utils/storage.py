@@ -3,6 +3,7 @@ import os
 import hashlib
 from botocore.client import Config
 from dotenv import load_dotenv
+from server.utils.logging import logger
 
 # Load environment variables from .env file
 load_dotenv()
@@ -38,7 +39,7 @@ def upload_string_to_bucket(file_content: str, object_name: str) -> bool:
     try:
         bucket.put_object(Bucket=BUCKET_NAME, Key=object_name, Body=file_content)
     except Exception as e:
-        print(e)
+        logger.exception(e)
         return False
     return True
 
@@ -58,7 +59,7 @@ def get_file_content_from_bucket(object_name: str) -> str | None:
         content = response["Body"].read().decode("utf-8")
         return content
     except Exception as e:
-        print(e)
+        logger.exception(e)
         return None
 
 
@@ -80,7 +81,7 @@ def list_files_in_folder(folder_prefix):
                 files.append(item["Key"])
         return files
     except Exception as e:
-        print(e)
+        logger.exception(e)
         return None
 
 
@@ -108,7 +109,7 @@ def delete_file_from_bucket(object_name: str) -> bool:
     try:
         bucket.delete_object(Bucket=BUCKET_NAME, Key=object_name)
     except Exception as e:
-        print(e)
+        logger.exception(e)
         return False
     return True
 
