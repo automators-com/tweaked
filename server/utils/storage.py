@@ -94,3 +94,40 @@ def get_folder_name(user_id: str, connection_string: str, table_id: str) -> str:
         folder = f"{folder}/{table_id}"
 
     return folder
+
+
+def delete_file_from_bucket(object_name: str) -> bool:
+    """Delete a file from an S3 bucket.
+
+    Args:
+        object_name (str): The name of the S3 object to delete.
+
+    Returns:
+        bool: True if the file was successfully deleted, False otherwise.
+    """
+    try:
+        bucket.delete_object(Bucket=BUCKET_NAME, Key=object_name)
+    except Exception as e:
+        print(e)
+        return False
+    return True
+
+
+def delete_all_files_in_folder(folder_prefix: str) -> bool:
+    """Delete all files in a specific folder of an S3 bucket.
+
+    Args:
+        folder_prefix (str): Prefix (folder path) to delete files from.
+
+    Returns:
+        bool: True if all files were successfully deleted, False otherwise.
+    """
+    files = list_files_in_folder(folder_prefix)
+    if files is None:
+        return False
+
+    for file in files:
+        if not delete_file_from_bucket(file):
+            return False
+
+    return True

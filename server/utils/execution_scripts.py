@@ -13,7 +13,7 @@ def call_script_in_subprocess(script: str):
     result = subprocess.run(["python3", temp_file_path], capture_output=True, text=True)
 
     # Clean up the temporary file
-    os.remove(temp_file_path)
+    os.remove(f"{temp_file_path}.py")
 
     return result
 

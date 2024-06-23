@@ -1,4 +1,7 @@
 import React, { useRef, useState } from "react";
+import { $baseUrl, $connection, $schema } from "@/store/config";
+import { useStore } from "@nanostores/react";
+import toast from "react-hot-toast";
 
 export default function SeedDatabase() {
   const ref = useRef(null);
@@ -31,17 +34,118 @@ export default function SeedDatabase() {
 }
 
 function SeedModal({ ref }: { ref: any }) {
+  const baseUrl = useStore($baseUrl);
+  const connection = useStore($connection);
+  const [schema, setSchema] = useState<string>("");
+  const [currentStep, setCurrentStep] = useState(0);
+  const [loading, setLoading] = useState(false);
+
+  async function handleSeed() {
+    setLoading(true);
+    setCurrentStep(1);
+
+    // analyze database
+    console.log("Analyzing database...");
+    if (!schema) {
+      const res = await fetch(`${baseUrl}/schema`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          connection_string: connection,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setSchema(data.schema);
+          console.log(data.schema);
+          setCurrentStep(2);
+          return true;
+        })
+        .catch((err) => {
+          console.error(err);
+          setCurrentStep(0);
+          setLoading(false);
+          return false;
+        });
+
+      if (!res) {
+        toast.error("Failed to analyze schema");
+        return;
+      }
+    }
+
+    // generate data
+    if (schema) {
+      await fetch(`${baseUrl}/data/generate`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          connection_string: connection,
+          db_schema: schema,
+          quantities: 10,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          return true;
+        })
+        .catch((err) => {
+          console.error(err);
+          return false;
+        });
+      console.log("Generating data...");
+      setTimeout(() => {
+        console.log("Done generating data");
+        setCurrentStep(3);
+      }, 3000);
+      // seed database
+      console.log("Seeding database...");
+      setTimeout(() => {
+        console.log("Done seeding database");
+        setCurrentStep(4);
+        setLoading(false);
+      }, 5000);
+    }
+  }
+
   return (
     <dialog ref={ref} id="seed_modal" className="modal">
       <div className="modal-box">
         <h3 className="font-bold text-center text-lg mb-4">
           Seed your database
         </h3>
-        <ul className="steps w-full text-xs">
-          <li className="step step-primary">Analyze Schema</li>
-          <li className="step step-primary">Generate Data</li>
-          <li className="step">Seed Database</li>
+        <ul className="steps w-full text-xs transition-all duration-500">
+          <li className={`step ${currentStep >= 1 ? `step-primary` : ``}`}>
+            {currentStep == 1 ? `Analyzing schema` : `Analyze Schema`}
+          </li>
+          <li className={`step ${currentStep >= 2 ? `step-primary` : ``}`}>
+            {currentStep == 2 ? `Generating Data` : `Generate Data`}
+          </li>
+          <li className={`step ${currentStep >= 3 ? `step-primary` : ``}`}>
+            {currentStep == 3 ? `Seeding...` : `Seed Database`}
+          </li>
         </ul>
+        <div className="modal-action">
+          <button
+            type="button"
+            className="btn btn-sm btn-primary"
+            disabled={loading}
+            onClick={async () => {
+              await handleSeed();
+            }}
+          >
+            {loading ? (
+              <span className="loading loading-spinner text-accent"></span>
+            ) : (
+              `Start`
+            )}
+          </button>
+        </div>
       </div>
       <form method="dialog" className="modal-backdrop">
         <button></button>

@@ -1,9 +1,7 @@
-import os
 from datetime import datetime
 import json
 
 from fastapi import APIRouter, HTTPException
-from openai import OpenAI
 from pydantic import BaseModel
 
 from server.utils.db_helpers import use_psycopg_protocol
@@ -12,6 +10,7 @@ from server.utils.storage import (
     list_files_in_folder,
     get_file_content_from_bucket,
     get_folder_name,
+    delete_all_files_in_folder,
 )
 from server.utils.execution_scripts import (
     call_script_in_subprocess,
@@ -19,16 +18,7 @@ from server.utils.execution_scripts import (
     db_exec_script,
 )
 from server.utils.prompts import new_tweak_prompt
-
-OPENAI_ORG = os.getenv("OPENAI_ORG")
-OPENAI_PROJECT = os.getenv("OPENAI_PROJECT")
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-
-client = OpenAI(
-    organization=OPENAI_ORG,
-    project=OPENAI_PROJECT,
-    api_key=OPENAI_API_KEY,
-)
+from server.utils.openai import client
 
 router = APIRouter()
 
@@ -137,24 +127,19 @@ class RunMigration(BaseModel):
 
 @router.post("/migrations/run")
 async def run_migration(req: RunMigration):
-    print(req)
     # get the list of migrations to run
     folder = get_folder_name(req.user_id, req.connection_string, req.table_id)
     files = list_files_in_folder(folder)
-    print(files)
 
     for file in files:
-        print(file)
         # fetch the file content
         script = get_file_content_from_bucket(file)
         script += db_exec_script(
             req.table_name, use_psycopg_protocol(req.connection_string)
         )
-        print(script)
 
         # Execute the temporary Python file in a subprocess
         result = call_script_in_subprocess(script)
-        print(result)
 
         if "success" in result.stdout:
             continue
@@ -169,3 +154,15 @@ async def run_migration(req: RunMigration):
                 )
 
     return "success"
+
+
+class DeleteMigrations(BaseModel):
+    user_id: str
+    connection_string: str
+
+
+@router.delete("/migrations/delete/all")
+async def delete_all_migrations(req: DeleteMigrations):
+    folder = get_folder_name(req.user_id, req.connection_string, None)
+    success = delete_all_files_in_folder(folder)
+    return {"success": success}

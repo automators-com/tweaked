@@ -1,34 +1,44 @@
+import os
 from pydantic import BaseModel
 from fastapi import APIRouter
-from omymodels import create_models
+
 from server.utils.db_helpers import dump_schema
-from server.utils.storage import upload_string_to_bucket
+
+from server.utils.prompts import schema_prompt
+
+# from server.utils.openai import client
+# from server.utils.storage import upload_string_to_bucket
+from server.utils.tmp import tmp_schema
 
 router = APIRouter()
 
 
 class Req(BaseModel):
-    connection_string: str = "postgres://user:password@localhost:5432/db"
+    connection_string: str = "postgres://user:password@host:5432/db"
 
 
 @router.post("/schema")
 async def determine_schema(req: Req):
     # dump tables
-    schema = dump_schema(req.connection_string)
+    schema_dump = dump_schema(req.connection_string)
 
-    # parse and construct sqlalchemy models
-    models = create_models(schema, models_type="sqlalchemy")["code"]
-    # small fixes to models
-    models = models.replace("double precision()", "sa.DOUBLE_PRECISION()")
-    models = models.replace("::text", "")
+    # Use AI to generate the sqlalchemy schema
+    messages = schema_prompt
+    messages.append(
+        {
+            "role": "system",
+            "content": f"Here is the pg dump output: \n{schema_dump}",
+        }
+    )
 
-    with open("schema_out.py", "w") as f:
-        f.write(models)
+    # create the completion using AI
+    # res = client.chat.completions.create(
+    #     model="gpt-4o",
+    #     messages=messages,
+    # )
+    # write the response to a file
+    # schema = res.choices[0].message.content
 
-    # upload schema to R2
-    upload_string_to_bucket(models, "schema_out.py")
+    # print files in current directory
 
-    # Print or use the schema string as needed
-    print(models)
-
-    return models
+    return {"schema": tmp_schema}
