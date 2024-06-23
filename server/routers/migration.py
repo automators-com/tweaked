@@ -6,18 +6,19 @@ from fastapi import APIRouter, HTTPException
 from openai import OpenAI
 from pydantic import BaseModel
 
-from ..utils.db_helpers import use_psycopg_protocol
-from ..utils.storage import (
+from server.utils.db_helpers import use_psycopg_protocol
+from server.utils.storage import (
     upload_string_to_bucket,
     list_files_in_folder,
     get_file_content_from_bucket,
     get_folder_name,
 )
-from ..utils.execution_scripts import (
+from server.utils.execution_scripts import (
     call_script_in_subprocess,
     preview_exec_script,
     db_exec_script,
 )
+from server.utils.prompts import new_tweak_prompt
 
 OPENAI_ORG = os.getenv("OPENAI_ORG")
 OPENAI_PROJECT = os.getenv("OPENAI_PROJECT")
@@ -47,16 +48,7 @@ async def generate_migration_file(req: NewMigration):
         raise HTTPException(status_code=400, detail="A prompt is required")
 
     # add context to the prompt
-    messages = [
-        {
-            "role": "system",
-            "content": "You are a helpful assistant. Your job is to write python functions that help users make desired modifications to their data. Provide only a simple valid python script in your response. The script should contain a function should be named 'handler'. It's only argument should be a pandas dataframe. It must return the modified pandas dataframe. The function should be written so that it works on a sample of the data as well as an entire dataset (oversample if needed). Do not write code that calls the function in your script.",
-        },
-        {
-            "role": "system",
-            "content": "Never change data column names. Never modify the shape of a dataframe. Never raise errors within the function.",
-        },
-    ]
+    messages = new_tweak_prompt
     if req.preview:
         messages.append(
             {

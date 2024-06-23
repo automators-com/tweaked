@@ -3,7 +3,11 @@ from pydantic import BaseModel
 from sqlmodel import create_engine
 import pandas as pd
 import numpy as np
-from ..utils.db_helpers import use_psycopg_protocol, fetch_table_stats, test_connection
+from server.utils.db_helpers import (
+    use_psycopg_protocol,
+    fetch_table_stats,
+    test_connection,
+)
 import hashlib
 
 router = APIRouter()

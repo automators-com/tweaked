@@ -5,7 +5,7 @@ import { themes } from "@/utils/themes";
 import { useTheme } from "next-themes";
 
 function ThemeChanger() {
-  const { setTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
   return (
     <select
       className="select select-bordered w-full max-w-xs"
@@ -13,6 +13,8 @@ function ThemeChanger() {
         e.preventDefault();
         setTheme(e.target.value);
       }}
+      defaultValue={theme}
+      value={theme}
     >
       {themes.map((theme, index) => {
         return (

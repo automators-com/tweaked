@@ -1,8 +1,8 @@
 from pydantic import BaseModel
 from fastapi import APIRouter
 from omymodels import create_models
-from ..utils.db_helpers import dump_schema
-from ..utils.storage import upload_string_to_bucket
+from server.utils.db_helpers import dump_schema
+from server.utils.storage import upload_string_to_bucket
 
 router = APIRouter()
 
