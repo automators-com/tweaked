@@ -8,7 +8,7 @@ function ThemeChanger() {
   const { theme, setTheme } = useTheme();
   return (
     <select
-      className="select select-bordered w-full max-w-xs"
+      className="select select-bordered select-sm w-full max-w-xs"
       onChange={(e) => {
         e.preventDefault();
         setTheme(e.target.value);
