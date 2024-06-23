@@ -15,6 +15,7 @@ export default function useTweaks() {
 
   return useQuery({
     queryKey: ["tweaks", fingerprint, selectedTable, connection],
+    refetchOnWindowFocus: false,
     queryFn: async () => {
       const res = await fetch(`${baseUrl}/migrations/list`, {
         method: "POST",
