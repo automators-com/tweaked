@@ -16,7 +16,7 @@ export default function MigrationBar() {
   return (
     <aside
       id="right-sidebar"
-      className={`bg-base-300 px-4 pt-2 pb-4 overflow-auto justify-between flex flex-col transition-transform transform ${nav.rightOpen ? "translate-x-0 w-60" : "translate-x-full w-0"}`}
+      className={`bg-base-300 px-4 pt-2 pb-4 overflow-hidden h-screen justify-between flex flex-col transition-transform transform ${nav.rightOpen ? "translate-x-0 w-60" : "translate-x-full w-0"}`}
     >
       <div className="flex flex-row w-full mb-2 items-center justify-between">
         <h4 className="text-xs uppercase">Data Migrations</h4>
@@ -37,7 +37,7 @@ export default function MigrationBar() {
           </svg>
         </button>
       </div>
-      <div className="h-full flex flex-col items-start gap-y-2">
+      <div className="h-full flex flex-col overflow-scroll items-start gap-y-2">
         {data?.length === 0 ? (
           <div className="w-full bg-base-100 hover:bg-opacity-50 cursor-pointer p-3 text-xs truncate rounded-md">
             No tweaks yet
@@ -47,14 +47,14 @@ export default function MigrationBar() {
             <div
               title={migration.prompt}
               key={index}
-              className="w-full bg-base-100 hover:bg-opacity-50 cursor-pointer p-3 text-xs truncate rounded-md"
+              className="w-full min-h-10 bg-base-100 hover:bg-opacity-50 cursor-pointer p-3 text-xs truncate rounded-md"
             >
               {migration.prompt}
             </div>
           ))
         )}
       </div>
-      <div>
+      <div className="bg-base-200 pt-4 w-full">
         <RunMigrations />
       </div>
     </aside>
