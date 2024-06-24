@@ -20,6 +20,7 @@ class QueryReq(BaseModel):
     prompt: str
     connection_string: str | None = None
     table_name: str | None = None
+    preview: list[dict] | None = None
 
 
 @router.post("/query")
@@ -34,7 +35,7 @@ async def query_table(req: QueryReq):
     messages.append(
         {
             "role": "user",
-            "content": f'My table is named: "{req.table_name}".',
+            "content": f'My table is named: "{req.table_name}". This is what a preview of the table looks like: {req.preview}',
         }
     )
     messages.append({"role": "user", "content": req.prompt})

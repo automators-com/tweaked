@@ -82,6 +82,7 @@ export default function SearchBar({
           prompt,
           connection_string: $connection.get(),
           table_name: lookupTableName($selectedTable.get(), $previews.get()),
+          preview: preview,
         }),
       });
       if (res.ok) {

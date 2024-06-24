@@ -20,7 +20,7 @@ export default function TweakMode() {
           className="label-text text-left text-xs uppercase"
           suppressHydrationWarning
         >
-          {mode}ing
+          {mode ? `${mode}ing` : `Tweaked.ai`}
         </span>
       </label>
     </div>
