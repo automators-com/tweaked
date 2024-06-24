@@ -8,8 +8,8 @@ import {
   $connection,
   $fingerprint,
 } from "@/store/config";
-import { hash } from "crypto";
 import toast from "react-hot-toast";
+import { useTweaks } from "@/hooks/useTweaks";
 
 export default function SearchBar({
   preview,
@@ -21,6 +21,7 @@ export default function SearchBar({
   const baseUrl = useStore($baseUrl);
   const [loading, setLoading] = useState(false);
   const [prompt, setPrompt] = useState("");
+  const { refetch } = useTweaks();
 
   async function handleSubmit() {
     if (prompt === "") {
@@ -48,6 +49,7 @@ export default function SearchBar({
         setSelectedPreview(data);
         setPrompt("");
         setLoading(false);
+        await refetch();
       } else {
         const data = await res.json();
         toast(data.detail);

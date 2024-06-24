@@ -1,20 +1,25 @@
 import os
 import tempfile
 import subprocess
+from server.utils.logging import logger
 
 
 def call_script_in_subprocess(script: str):
     # Write the script to a temporary Python file
     with tempfile.NamedTemporaryFile(delete=False, suffix=".py") as temp_file:
+        logger.info(f"Created new tmp script: {temp_file.name}")
         temp_file.write(script.encode())
         temp_file_path = temp_file.name
 
     # Execute the temporary Python file in a subprocess
-    result = subprocess.run(["python3", temp_file_path], capture_output=True, text=True)
+    command = ["python3", temp_file_path]
+    logger.info(f"Executing command: {' '.join(command)}")
+    result = subprocess.run(command, capture_output=True, text=True)
 
     # Clean up the temporary file
-    os.remove(f"{temp_file_path}.py")
-
+    logger.info(f"Deleting temporary file: {temp_file_path}")
+    os.remove(temp_file_path)
+    
     return result
 
 

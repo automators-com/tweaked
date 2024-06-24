@@ -50,6 +50,7 @@ async def fetch_database_table_previews(db_info: DatabaseInfo):
             table_preview.replace({np.nan: None}, inplace=True)
             previews[pos]["preview"] = table_preview.to_dict(orient="records")
 
+    logger.info(f"Returning table previews: {len(previews)}")
     return previews
 
 

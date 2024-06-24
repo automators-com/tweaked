@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import { $baseUrl, $connection, $schema } from "@/store/config";
 import { useStore } from "@nanostores/react";
 import toast from "react-hot-toast";
+import { usePreviews } from "@/hooks/usePreviews";
 
 export default function SeedDatabase() {
   const ref = useRef(null);
@@ -39,6 +40,7 @@ function SeedModal({ ref }: { ref: any }) {
   const [schema, setSchema] = useState<string>("");
   const [currentStep, setCurrentStep] = useState(0);
   const [loading, setLoading] = useState(false);
+  const { refetch } = usePreviews();
 
   async function handleSeed() {
     setLoading(true);
@@ -138,6 +140,7 @@ function SeedModal({ ref }: { ref: any }) {
             disabled={loading}
             onClick={async () => {
               await handleSeed();
+              await refetch();
             }}
           >
             {loading ? (

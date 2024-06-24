@@ -7,7 +7,7 @@ import {
 import { useStore } from "@nanostores/react";
 import { useQuery } from "@tanstack/react-query";
 
-export default function useTweaks() {
+export function useTweaks() {
   const baseUrl = useStore($baseUrl);
   const fingerprint = useStore($fingerprint);
   const selectedTable = useStore($selectedTable);
@@ -15,7 +15,6 @@ export default function useTweaks() {
 
   return useQuery({
     queryKey: ["tweaks", fingerprint, selectedTable, connection],
-    refetchOnWindowFocus: false,
     queryFn: async () => {
       const res = await fetch(`${baseUrl}/migrations/list`, {
         method: "POST",

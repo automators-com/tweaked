@@ -76,7 +76,7 @@ async def generate_migration_file(req: NewMigration):
 
     # append the preview execution script
     script += preview_exec_script(req.preview)
-    logger.info("AI created the script:\n", script)
+    logger.info(f"AI created the script:\n {script}")
 
     # Execute the temporary Python file in a subprocess
     result = call_script_in_subprocess(script)

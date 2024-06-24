@@ -15,6 +15,7 @@ def is_internal_table(table_name: str) -> bool:
 
 
 async def fetch_table_stats(engine: Engine):
+    logger.info("Fetching table statistics")
     with engine.connect() as connection:
         schema_name = "public"  # TODO: create a function to determine schema name
         stats = pd.read_sql(

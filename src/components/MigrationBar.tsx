@@ -3,7 +3,7 @@
 import { useStore } from "@nanostores/react";
 import { $nav, toggleRightNav } from "@/store/nav";
 import RunMigrations from "./runMigrations";
-import useTweaks from "@/hooks/useTweaks";
+import { useTweaks } from "@/hooks/useTweaks";
 
 export default function MigrationBar() {
   const nav = useStore($nav);
@@ -54,7 +54,7 @@ export default function MigrationBar() {
           ))
         )}
       </div>
-      <div className="bg-base-200 pt-4 w-full">
+      <div className="bg-base-300 pt-4 w-full">
         <RunMigrations />
       </div>
     </aside>
