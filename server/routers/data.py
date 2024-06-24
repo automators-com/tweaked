@@ -62,6 +62,8 @@ class GenerateRequest(BaseModel):
 
 @router.post("/data/generate")
 async def generate_data_from_schema(req: GenerateRequest):
+    files = []
+    tmp = None
     try:
         logger.info("Generating data from schema")
         engine = create_engine(use_psycopg_protocol(req.connection_string))
