@@ -2,7 +2,6 @@ from pydantic import BaseModel
 from fastapi import APIRouter, HTTPException
 
 from server.utils.db_helpers import dump_schema
-
 from server.utils.prompts import schema_prompt
 
 # from server.utils.openai import client
@@ -21,22 +20,22 @@ class Req(BaseModel):
 async def determine_schema(req: Req):
     logger.info(f"Generating schema for {req.connection_string}")
     # dump tables
-    try:
-        schema_dump = dump_schema(req.connection_string)
-    except Exception as e:
-        logger.error(f"Error pg_dumping schema: {e}")
-        raise HTTPException(
-            status_code=400, detail="Error extracting schema from database."
-        )
+    # try:
+    #     schema_dump = dump_schema(req.connection_string)
+    # except Exception as e:
+    #     logger.error(f"Error pg_dumping schema: {e}")
+    #     raise HTTPException(
+    #         status_code=400, detail="Error extracting schema from database."
+    #     )
 
     # Use AI to generate the sqlalchemy schema
-    messages = schema_prompt
-    messages.append(
-        {
-            "role": "system",
-            "content": f"Here is the pg dump output: \n{schema_dump}",
-        }
-    )
+    # messages = schema_prompt
+    # messages.append(
+    #     {
+    #         "role": "system",
+    #         "content": f"Here is the pg dump output: \n{schema_dump}",
+    #     }
+    # )
 
     # create the completion using AI
     # res = client.chat.completions.create(
