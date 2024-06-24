@@ -3,7 +3,7 @@
   "description": "Fine tune your data.",
   "author": "Automators",
   "type": "module",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
