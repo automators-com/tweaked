@@ -3,6 +3,7 @@ import os
 import hashlib
 from botocore.client import Config
 from dotenv import load_dotenv
+from server.utils.logging import logger
 
 # Load environment variables from .env file
 load_dotenv()
@@ -38,7 +39,7 @@ def upload_string_to_bucket(file_content: str, object_name: str) -> bool:
     try:
         bucket.put_object(Bucket=BUCKET_NAME, Key=object_name, Body=file_content)
     except Exception as e:
-        print(e)
+        logger.exception(e)
         return False
     return True
 
@@ -58,7 +59,7 @@ def get_file_content_from_bucket(object_name: str) -> str | None:
         content = response["Body"].read().decode("utf-8")
         return content
     except Exception as e:
-        print(e)
+        logger.exception(e)
         return None
 
 
@@ -80,7 +81,7 @@ def list_files_in_folder(folder_prefix):
                 files.append(item["Key"])
         return files
     except Exception as e:
-        print(e)
+        logger.exception(e)
         return None
 
 
@@ -94,3 +95,40 @@ def get_folder_name(user_id: str, connection_string: str, table_id: str) -> str:
         folder = f"{folder}/{table_id}"
 
     return folder
+
+
+def delete_file_from_bucket(object_name: str) -> bool:
+    """Delete a file from an S3 bucket.
+
+    Args:
+        object_name (str): The name of the S3 object to delete.
+
+    Returns:
+        bool: True if the file was successfully deleted, False otherwise.
+    """
+    try:
+        bucket.delete_object(Bucket=BUCKET_NAME, Key=object_name)
+    except Exception as e:
+        logger.exception(e)
+        return False
+    return True
+
+
+def delete_all_files_in_folder(folder_prefix: str) -> bool:
+    """Delete all files in a specific folder of an S3 bucket.
+
+    Args:
+        folder_prefix (str): Prefix (folder path) to delete files from.
+
+    Returns:
+        bool: True if all files were successfully deleted, False otherwise.
+    """
+    files = list_files_in_folder(folder_prefix)
+    if files is None:
+        return False
+
+    for file in files:
+        if not delete_file_from_bucket(file):
+            return False
+
+    return True

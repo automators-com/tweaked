@@ -7,7 +7,7 @@ export const $fingerprint = persistentAtom<string | undefined>(
 
 export const $connection = persistentAtom<string>(
   "connection",
-  "postgres://user:password@localhost:5432/dbname",
+  "postgres://user:password@host:5432/dbname",
 );
 
 export const $baseUrl = persistentAtom<string>(
@@ -21,3 +21,5 @@ export const $previewLimit = persistentAtom<number>("previewLimit", 10, {
   encode: (value) => value.toString(),
   decode: (value) => parseInt(value),
 });
+
+export const $schema = persistentAtom<string | undefined>("schema", undefined);

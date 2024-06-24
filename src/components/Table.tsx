@@ -60,12 +60,14 @@ export default function Table() {
                   return (
                     <tr key={index} className="hover">
                       {Object.values(row).map((value, index) => {
+                        const displayValue: string =
+                          typeof value === "string" ? value : String(value);
                         return (
                           <td
-                            className="truncate text-xs select-text"
+                            className={`truncate text-xs select-text ${displayValue === "null" ? `opacity-50 uppercase` : ``}`}
                             key={index}
                           >
-                            {value as string}
+                            {displayValue}
                           </td>
                         );
                       })}

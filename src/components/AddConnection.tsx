@@ -33,6 +33,9 @@ export default function AddConnection() {
         $previews.set(data);
         // redirect to the tweaks page
         router.push("/tweaks");
+      } else {
+        const data = await res.json();
+        throw new Error(data.detail);
       }
     } catch (error) {
       if (error instanceof Error) {

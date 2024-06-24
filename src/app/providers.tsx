@@ -12,7 +12,14 @@ import { listen } from "@tauri-apps/api/event";
 import { useRouter } from "next/navigation";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
-  const queryClient = new QueryClient({});
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        refetchOnWindowFocus: false,
+        retry: 0,
+      },
+    },
+  });
   const router = useRouter();
 
   // get and store users fingerprint
@@ -52,13 +59,10 @@ export default function Providers({ children }: { children: React.ReactNode }) {
             className: "",
             duration: 5000,
             style: {
-              background: "#363636",
-              color: "#fff",
-            },
-
-            // Default options for specific types
-            success: {
-              duration: 3000,
+              background: "oklch(var(--b3))",
+              color: "oklch(var(--bc))",
+              fontSize: "0.75rem",
+              lineHeight: "1rem",
             },
           }}
         />

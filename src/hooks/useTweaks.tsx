@@ -7,7 +7,7 @@ import {
 import { useStore } from "@nanostores/react";
 import { useQuery } from "@tanstack/react-query";
 
-export default function useTweaks() {
+export function useTweaks() {
   const baseUrl = useStore($baseUrl);
   const fingerprint = useStore($fingerprint);
   const selectedTable = useStore($selectedTable);

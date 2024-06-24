@@ -16,9 +16,12 @@
     "tauri": "tauri",
     "server:venv": "python3 -m venv .venv",
     "server:activate": "source .venv/bin/activate",
-    "server:dev": "cd server && ../.venv/bin/uvicorn main:app --reload",
-    "server:start": "pnpm run server:activate && cd server && ../.venv/bin/uvicorn main:app",
-    "server:install": "pnpm run server:venv && pnpm run server:activate && .venv/bin/pip install -r ./server/requirements.txt"
+    "server:install": "pnpm run server:venv && pnpm run server:activate && .venv/bin/pip install -r ./server/requirements.txt",
+    "server:dev": "pnpm run server:activate && .venv/bin/uvicorn server.main:app --reload --reload-exclude tmp*",
+    "server:start": "pnpm run server:activate && .venv/bin/uvicorn server.main:app",
+    "docker:server:build": "cd server && docker build --no-cache -t tweaked-server .",
+    "docker:server:start": "cd server && docker-compose up app",
+    "docker:server:dev": "cd server && docker-compose up app-dev"
   },
   "dependencies": {
     "@nanostores/persistent": "^0.10.1",
