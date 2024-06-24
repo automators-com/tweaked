@@ -3,10 +3,11 @@ from sqlalchemy.exc import SQLAlchemyError
 import pandas as pd
 import subprocess
 from io import StringIO
+from server.utils.logging import logger
 
 
 def use_psycopg_protocol(url: str) -> str:
-    return "postgresql+psycopg://" + url.split("://")[1]
+    return "postgresql+psycopg2://" + url.split("://")[1]
 
 
 def is_internal_table(table_name: str) -> bool:
@@ -24,14 +25,17 @@ async def fetch_table_stats(engine: Engine):
 
 
 def test_connection(engine: Engine) -> str:
+    logger.info("Testing database connection")
     try:
         with engine.connect():
             return "ok"
     except SQLAlchemyError as e:
+        logger.exception(e)
         return str(e.__dict__["orig"])
 
 
 def dump_schema(connection_string):
+    logger.info("Extracting schema using pg_dump")
     # Construct the pg_dump command
     command = ["pg_dump", "-C", connection_string, "-s"]
 

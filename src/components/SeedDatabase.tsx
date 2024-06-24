@@ -58,10 +58,10 @@ function SeedModal({ ref }: { ref: any }) {
       })
         .then((res) => res.json())
         .then((data) => {
-          setSchema(data.schema);
-          console.log(data.schema);
           setCurrentStep(2);
-          return true;
+          if (data.schema) {
+            return data.schema;
+          }
         })
         .catch((err) => {
           console.error(err);
@@ -70,14 +70,17 @@ function SeedModal({ ref }: { ref: any }) {
           return false;
         });
 
+      console.log({ res });
+      setSchema(res);
       if (!res) {
         toast.error("Failed to analyze schema");
         return;
       }
-    }
 
-    // generate data
-    if (schema) {
+      // generate data
+      console.log("Generating data...");
+      setCurrentStep(3);
+
       await fetch(`${baseUrl}/data/generate`, {
         method: "POST",
         headers: {
@@ -85,31 +88,29 @@ function SeedModal({ ref }: { ref: any }) {
         },
         body: JSON.stringify({
           connection_string: connection,
-          db_schema: schema,
+          db_schema: res,
           quantities: 10,
         }),
       })
-        .then((res) => res.json())
+        .then((res) => {
+          if (res.ok) {
+            return res.json();
+          } else {
+            throw new Error("Failed to generate data");
+          }
+        })
         .then((data) => {
           console.log(data);
-          return true;
+          setCurrentStep(4);
+          toast.success("Database seeded successfully");
+          setLoading(false);
         })
         .catch((err) => {
           console.error(err);
-          return false;
+          setCurrentStep(2);
+          toast.error("Failed to generate data");
+          setLoading(false);
         });
-      console.log("Generating data...");
-      setTimeout(() => {
-        console.log("Done generating data");
-        setCurrentStep(3);
-      }, 3000);
-      // seed database
-      console.log("Seeding database...");
-      setTimeout(() => {
-        console.log("Done seeding database");
-        setCurrentStep(4);
-        setLoading(false);
-      }, 5000);
     }
   }
 

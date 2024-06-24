@@ -1,3 +1,4 @@
+import os
 import hashlib
 import tempfile
 import pandas as pd
@@ -6,7 +7,7 @@ import numpy as np
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from sqlalchemy import text, create_engine
-from datamaker import generate_data
+from datamaker import generate_data, random_amount, random_double_precision_array
 from importlib import import_module
 from pathlib import Path
 from server.utils.logging import logger
@@ -60,46 +61,74 @@ class GenerateRequest(BaseModel):
 
 @router.post("/data/generate")
 async def generate_data_from_schema(req: GenerateRequest):
-    logger.info("Generating data from schema")
-    engine = create_engine(use_psycopg_protocol(req.connection_string))
+    try:
+        logger.info("Generating data from schema")
+        engine = create_engine(use_psycopg_protocol(req.connection_string))
 
-    with tempfile.NamedTemporaryFile(dir="./server", delete=True, suffix=".py") as f:
-        f.write(req.db_schema.encode())
-        tmp_file_name = f.name.split("/")[-1].split(".")[0]
-        schema = import_module(f"server.{tmp_file_name}")
+        with tempfile.NamedTemporaryFile(
+            dir="./server", delete=True, suffix=".py"
+        ) as f:
+            logger.info(f"Writing schema to {f.name}")
+            f.write(req.db_schema.encode())
+            tmp_file_name = f.name.split("/")[-1].split(".")[0]
+            schema = import_module(f"server.{tmp_file_name}")
 
-    # generate data
-    with tempfile.TemporaryDirectory(dir="./server", delete=False) as tmp:
-        data_dir = Path(tmp)
+        # generate data
+        with tempfile.TemporaryDirectory(dir="./server", delete=False) as tmp:
+            logger.info(f"Generating data in {tmp}")
+            data_dir = Path(tmp)
 
-        data, order = generate_data(
-            schema,
-            quantities={},
-            fallback_quantity=req.quantities,
-            custom_providers={},
-            data_dir=data_dir,
-        )
+            # User defined data generator functions
+            custom_providers = {
+                "random_amount": random_amount,
+                "random_double_precision_array": random_double_precision_array,
+            }
 
-        # get the list of generated data files
-        files = data_dir.glob("*.csv")
-        # sort files according to the order of the tables
-        files = sorted(files, key=lambda x: order.index(x.stem))
+            logger.info(f"Checking schema dir: {dir(schema)}")
 
-        # First truncate the existing table
-        with engine.connect() as conn:
+            data, order = generate_data(
+                schema,
+                quantities={},
+                fallback_quantity=req.quantities,
+                custom_providers=custom_providers,
+                data_dir=data_dir,
+            )
+
+            # get the list of generated data files
+            files = data_dir.glob("*.csv")
+            # sort files according to the order of the tables
+            files = sorted(files, key=lambda x: order.index(x.stem))
+
+            # First truncate the existing tables
+            with engine.connect() as conn:
+                for file in files:
+                    table_name = file.stem
+                    logger.info(f"Truncating table: {table_name}'")
+                    print(text(f'TRUNCATE "public"."{table_name}" CASCADE;'))
+                    conn.execute(text(f'TRUNCATE "public"."{table_name}" CASCADE;'))
+
+                conn.commit()
+
+            # seed the database with the generated data
             for file in files:
                 table_name = file.stem
-                conn.execute(text(f'TRUNCATE "{table_name}" CASCADE;'))
+                df = pd.read_csv(file)
 
-        # seed the database with the generated data
+                # TODO: Remove this manual fix for the client table - self relation
+                if table_name == "Client":
+                    df["clientId"] = None
+
+                logger.info(f"Seeding table: {table_name}")
+                df.to_sql(table_name, engine, if_exists="append", index=False)
+
+        return {
+            "success": True,
+        }
+    except Exception as e:
+        logger.error(f"Error generating data: {e}")
+        raise HTTPException(status_code=400, detail="Error generating data.")
+    finally:
         for file in files:
-            table_name = file.stem
-            df = pd.read_csv(file)
-
-            # Manual fix for the client table
-            if table_name == "Client":
-                df["clientId"] = None
-
-            df.to_sql(table_name, engine, if_exists="append", index=False)
-
-    return "success"
+            os.remove(file)
+        os.removedirs(tmp)
+        logger.info(f"Removed {f.name}")
