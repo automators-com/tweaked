@@ -7,9 +7,13 @@ import {
   $selectedTable,
   $connection,
   $fingerprint,
+  $mode,
+  Mode,
 } from "@/store/config";
 import toast from "react-hot-toast";
 import { useTweaks } from "@/hooks/useTweaks";
+import { lookupTableName } from "@/utils/tables";
+import { $previews } from "@/store/previews";
 
 export default function SearchBar({
   preview,
@@ -18,12 +22,13 @@ export default function SearchBar({
   preview: any;
   setSelectedPreview: any;
 }) {
+  const mode = useStore($mode);
   const baseUrl = useStore($baseUrl);
   const [loading, setLoading] = useState(false);
   const [prompt, setPrompt] = useState("");
   const { refetch } = useTweaks();
 
-  async function handleSubmit() {
+  async function handleTweakSubmit() {
     if (prompt === "") {
       return;
     }
@@ -61,12 +66,51 @@ export default function SearchBar({
     }
   }
 
+  async function handleQuerySubmit() {
+    if (prompt === "") {
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await fetch(`${baseUrl}/query`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          prompt,
+          connection_string: $connection.get(),
+          table_name: lookupTableName($selectedTable.get(), $previews.get()),
+        }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        console.log(data);
+        setSelectedPreview(data);
+        setPrompt("");
+        setLoading(false);
+      } else {
+        const data = await res.json();
+        toast(data.detail);
+        setLoading(false);
+      }
+    } catch (e) {
+      console.error(e);
+      setLoading(false);
+    }
+  }
+
   return (
     <form
       className="flex w-full gap-x-4"
       onSubmit={(e) => {
         e.preventDefault();
-        handleSubmit();
+        if (mode === Mode.TWEAK) {
+          handleTweakSubmit();
+        } else if (mode === Mode.QUERY) {
+          handleQuerySubmit();
+        }
       }}
     >
       <label className="input input-bordered bg-base-300 border-none focus-within:outline-none input-md w-full flex items-center gap-2">
@@ -75,7 +119,11 @@ export default function SearchBar({
           className="grow"
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
-          placeholder="How would you like to tweak your data?"
+          placeholder={
+            mode === Mode.TWEAK
+              ? "How would you like to tweak this table?"
+              : "How would you like to query this table?"
+          }
         />
         {loading && <span className="loading loading-dots text-accent"></span>}
         <button

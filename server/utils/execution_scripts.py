@@ -19,7 +19,7 @@ def call_script_in_subprocess(script: str):
     # Clean up the temporary file
     logger.info(f"Deleting temporary file: {temp_file_path}")
     os.remove(temp_file_path)
-    
+
     return result
 
 
@@ -32,6 +32,28 @@ try:
     res = handler(data.copy(deep=True)).to_dict(orient='records')
 except Exception as e:
     res = data.to_dict(orient='records')
+
+print(json.dumps(res))
+"""
+
+
+def preview_query_script(connection_string: str, table_name: str):
+    return f"""
+import json
+from sqlalchemy import create_engine
+
+engine = create_engine('{connection_string}')
+
+try:
+    df = handler(engine)
+    
+    # convert any timestamps to strings
+    for col in df.select_dtypes(include=['datetime64']).columns:
+        df[col] = df[col].astype(str)
+    
+    res = df.to_dict(orient='records')
+except Exception as e:
+    res = []
 
 print(json.dumps(res))
 """

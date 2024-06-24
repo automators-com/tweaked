@@ -86,7 +86,7 @@ async def generate_migration_file(req: NewMigration):
     if result.stderr:
         logger.error(result.stderr)
         # get the last line of the error
-        detail = result.stderr.split("\n")[-2]
+        detail = result.stderr
         if detail:
             raise HTTPException(status_code=400, detail=detail)
         else:
@@ -150,7 +150,7 @@ async def run_migration(req: RunMigration):
         if "success" in result.stdout:
             continue
         else:
-            detail = result.stderr.split("\n")[-2]
+            detail = result.stderr
             if detail:
                 raise HTTPException(status_code=400, detail=detail)
             else:

@@ -1,5 +1,12 @@
 import { persistentAtom } from "@nanostores/persistent";
 
+export enum Mode {
+  SEED = "seed",
+  TWEAK = "tweak",
+  QUERY = "query",
+}
+export const $mode = persistentAtom<Mode>(Mode.TWEAK);
+
 export const $fingerprint = persistentAtom<string | undefined>(
   "fingerprint",
   undefined,

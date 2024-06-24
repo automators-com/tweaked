@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import SeedDatabase from "./SeedDatabase";
+import TweakMode from "./TweakMode";
 
 const TableList = dynamic(() => import("@/components/TableList"), {
   ssr: false,
@@ -15,6 +16,7 @@ export default function Navbar() {
   return (
     <nav className="bg-base-300 w-60 flex h-screen flex-col justify-between px-4">
       <div id="title-bar-area" className="h-10 w-full"></div>
+      <TweakMode />
       {currentUrl === "/tweaks" ? (
         <TableList />
       ) : (
