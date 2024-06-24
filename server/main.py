@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from server.routers import data, migration, updater, schema
+from server.routers import data, migration, updater, schema, query
 
 app = FastAPI(
     title="Tweaked.ai",
@@ -11,6 +11,7 @@ app.include_router(data.router, tags=["data"])
 app.include_router(migration.router, tags=["migrations"])
 app.include_router(updater.router, tags=["updater"])
 app.include_router(schema.router, tags=["schema"])
+app.include_router(query.router, tags=["query"])
 
 origins = ["*"]
 
