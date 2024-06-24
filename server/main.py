@@ -6,6 +6,7 @@ app = FastAPI(
     title="Tweaked.ai",
     description="Fine tune your data",
     docs_url="/",
+    version="0.0.7",
 )
 app.include_router(data.router, tags=["data"])
 app.include_router(migration.router, tags=["migrations"])

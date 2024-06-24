@@ -1,6 +1,6 @@
 [package]
 name = "tweaked"
-version = "0.0.6"
+version = "0.0.7"
 description = "Fine tune your data."
 authors = ["Automators"]
 license = ""
